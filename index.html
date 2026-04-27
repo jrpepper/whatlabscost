@@ -1,0 +1,1714 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>What does a blood test really cost?</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #faf9f7;
+  --panel: #ffffff;
+  --ink: #1a1d24;
+  --ink-soft: #5a6373;
+  --ink-faint: #8a93a3;
+  --line: #e3e6ec;
+  --line-strong: #cdd2db;
+  --accent: #2563eb;
+  --accent-soft: #dbeafe;
+  --good: #047857;
+  --good-soft: #d1fae5;
+  --warn: #b45309;
+  --bad: #b91c1c;
+  --bad-soft: #fee2e2;
+  --shadow: 0 1px 2px rgba(20,25,40,.06), 0 4px 12px rgba(20,25,40,.04);
+  --radius: 10px;
+  --serif: ui-serif, "Iowan Old Style", "Apple Garamond", "Palatino Linotype", "Georgia", serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --c-dpc: #047857;
+  --c-medicare: #0891b2;
+  --c-insurance: #1e40af;
+  --c-cash: #dc2626;
+  --c-gross: #7c2d12;
+}
+[data-theme="dark"] {
+  --bg: #0f1115;
+  --panel: #181c23;
+  --ink: #e6e9ef;
+  --ink-soft: #9aa3b2;
+  --ink-faint: #6b7385;
+  --line: #2a2f39;
+  --line-strong: #3a4150;
+  --accent: #60a5fa;
+  --accent-soft: #1e3a5f;
+  --good: #34d399;
+  --good-soft: #0f3a2c;
+  --warn: #fbbf24;
+  --bad: #f87171;
+  --bad-soft: #3a1414;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 4px 12px rgba(0,0,0,.3);
+  --c-insurance: #6366f1;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.55 var(--sans);
+  padding: 0 0 60px;
+}
+.wrap { max-width: 940px; margin: 0 auto; padding: 0 24px; }
+.wrap-wide { max-width: 1320px; margin: 0 auto; padding: 0 24px; }
+
+nav.top {
+  padding: 12px 0 8px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+  font-size: 11.5px;
+  color: var(--ink-faint);
+}
+nav.top button {
+  background: transparent;
+  border: none;
+  color: var(--ink-faint);
+  padding: 2px 0;
+  font-size: 11.5px;
+  cursor: pointer;
+  font-family: inherit;
+}
+nav.top button:hover { color: var(--ink-soft); text-decoration: underline; }
+
+section.hero { margin: 26px 0 48px; }
+section.hero h1 {
+  font-family: var(--serif);
+  font-size: 44px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0 0 14px;
+  font-weight: 600;
+}
+section.hero .deck {
+  font-family: var(--serif);
+  font-size: 22px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  margin: 0 0 28px;
+  font-weight: 400;
+  font-style: italic;
+}
+section.hero .lede {
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--ink);
+  margin: 14px 0;
+}
+section.hero .lede b { color: var(--ink); }
+section.hero .lede .num { font-family: var(--mono); font-weight: 600; }
+section.hero .lede .red { color: var(--bad); font-family: var(--mono); font-weight: 600; }
+section.hero .lede .green { color: var(--good); font-family: var(--mono); font-weight: 600; }
+section.hero .source-note {
+  margin-top: 22px;
+  padding: 14px 16px;
+  background: var(--panel);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+}
+section.hero .source-note a { color: var(--accent); }
+@media (max-width: 700px) {
+  section.hero h1 { font-size: 32px; }
+  section.hero .deck { font-size: 18px; }
+  section.hero .lede { font-size: 16px; }
+}
+
+section.story {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 32px 28px;
+  margin-bottom: 22px;
+  box-shadow: var(--shadow);
+}
+section.story .question {
+  font-family: var(--serif);
+  font-size: 26px;
+  line-height: 1.25;
+  margin: 0 0 6px;
+  letter-spacing: -0.01em;
+}
+section.story .basket-hint {
+  color: var(--ink-soft);
+  font-size: 14px;
+  margin: 0 0 22px;
+}
+section.story .basket-hint .basket-trigger {
+  display: inline-block;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--ink);
+  border-bottom: 1px dashed var(--ink-faint);
+  padding: 0 1px;
+  transition: all .15s;
+  white-space: nowrap;
+}
+section.story .basket-hint .basket-trigger:hover {
+  border-bottom-color: var(--accent);
+  color: var(--accent);
+}
+section.story .basket-hint .basket-trigger b { color: inherit; font-weight: 600; }
+.scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 26px;
+}
+@media (max-width: 720px) { .scenario-grid { grid-template-columns: repeat(2, 1fr); } }
+.scenario-btn {
+  background: var(--bg);
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: all .15s;
+  font-family: inherit;
+  position: relative;
+}
+.scenario-btn .sc-warn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--warn);
+  background: #fef3c7;
+  padding: 2px 7px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  line-height: 1.4;
+}
+[data-theme="dark"] .scenario-btn .sc-warn { background: #3a2c0a; }
+.story-warning-link {
+  display: inline-block;
+  margin-top: 4px;
+  color: var(--warn);
+  font-family: var(--sans);
+  font-size: 13.5px;
+  text-decoration: none;
+  border-bottom: 1px dashed var(--warn);
+  cursor: pointer;
+  padding-bottom: 1px;
+}
+.story-warning-link:hover { color: var(--bad); border-bottom-color: var(--bad); }
+.scenario-btn:hover { border-color: var(--line-strong); }
+.scenario-btn.active {
+  border-color: currentColor;
+  background: var(--panel);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.scenario-btn .sc-emoji { font-size: 22px; margin-bottom: 6px; line-height: 1; }
+.scenario-btn .sc-label { font-weight: 600; font-size: 14px; color: var(--ink); margin-bottom: 2px; }
+.scenario-btn .sc-sub { font-size: 12px; color: var(--ink-soft); line-height: 1.3; }
+.scenario-btn[data-scenario="dpc"] { color: var(--c-dpc); }
+.scenario-btn[data-scenario="medicare"] { color: var(--c-medicare); }
+.scenario-btn[data-scenario="insurance"] { color: var(--c-insurance); }
+.scenario-btn[data-scenario="cash"] { color: var(--c-cash); }
+
+.story-result {
+  margin-bottom: 24px;
+  padding: 24px 0 0;
+  border-top: 1px solid var(--line);
+}
+.story-headline {
+  font-family: var(--serif);
+  font-size: 16px;
+  color: var(--ink-soft);
+  margin: 0 0 4px;
+}
+.story-bignum {
+  font-family: var(--serif);
+  font-size: 64px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin: 0 0 10px;
+}
+.story-bignum.dpc { color: var(--c-dpc); }
+.story-bignum.medicare { color: var(--c-medicare); }
+.story-bignum.insurance { color: var(--c-insurance); }
+.story-bignum.cash { color: var(--c-cash); }
+.story-narrative {
+  font-family: var(--serif);
+  font-size: 19px;
+  line-height: 1.55;
+  margin: 0;
+  max-width: 640px;
+  color: var(--ink);
+}
+.story-narrative .num { font-family: var(--mono); font-weight: 600; }
+.story-narrative .red { color: var(--bad); }
+.story-narrative .green { color: var(--good); }
+@media (max-width: 700px) {
+  .story-bignum { font-size: 48px; }
+  .story-narrative { font-size: 17px; }
+}
+
+.story-chart-host { height: 240px; margin-top: 14px; }
+
+.tier-tiles {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-top: 18px;
+}
+@media (max-width: 720px) { .tier-tiles { grid-template-columns: repeat(2, 1fr); } }
+.tier-tile {
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 10px 12px;
+  border-top: 3px solid var(--line-strong);
+  position: relative;
+}
+.tier-tile.dpc { border-top-color: var(--c-dpc); }
+.tier-tile.medicare { border-top-color: var(--c-medicare); }
+.tier-tile.insurance { border-top-color: var(--c-insurance); }
+.tier-tile.cash { border-top-color: var(--c-cash); }
+.tier-tile.gross { border-top-color: var(--c-gross); }
+.tier-tile.selected { background: var(--panel); outline: 2px solid currentColor; }
+.tier-tile.dpc.selected { color: var(--c-dpc); }
+.tier-tile.medicare.selected { color: var(--c-medicare); }
+.tier-tile.insurance.selected { color: var(--c-insurance); }
+.tier-tile.cash.selected { color: var(--c-cash); }
+.tier-tile .label {
+  font-size: 11px; color: var(--ink-soft); margin-bottom: 4px;
+  text-transform: uppercase; letter-spacing: .03em;
+  display: flex; align-items: center; gap: 4px;
+}
+.tier-tile .label .info {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 13px; height: 13px; border-radius: 50%;
+  background: var(--line); color: var(--ink-soft);
+  font-size: 9px; font-weight: 700; cursor: help;
+  font-family: var(--sans);
+}
+.tier-tile .price { font-family: var(--mono); font-weight: 700; font-size: 18px; color: var(--ink); }
+.tier-tile.selected .price { color: currentColor; }
+.tier-tile .vs { font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
+
+details.glossary {
+  margin-top: 14px;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+}
+details.glossary summary {
+  cursor: pointer;
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+  user-select: none;
+}
+details.glossary summary::-webkit-details-marker { display: none; }
+details.glossary summary::before { content: "ⓘ"; font-size: 13px; }
+details.glossary summary:hover { text-decoration: underline; }
+details.glossary .glossary-body {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  padding: 14px;
+  background: var(--bg);
+  border-radius: 8px;
+}
+@media (max-width: 720px) { details.glossary .glossary-body { grid-template-columns: 1fr; } }
+.gloss-item { padding: 4px 0; }
+.gloss-item h4 {
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex; align-items: center; gap: 6px;
+}
+.gloss-item h4 .dot {
+  display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+}
+.gloss-item p { margin: 0; font-size: 12.5px; line-height: 1.5; color: var(--ink-soft); }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 32px;
+}
+@media (max-width: 720px) { .stats { grid-template-columns: 1fr; } }
+.stat {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+}
+.stat .label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+.stat .value {
+  font-family: var(--serif);
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.stat .value.bad { color: var(--bad); }
+.stat .hint {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+details.about {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  margin-bottom: 32px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+details.about summary {
+  cursor: pointer; padding: 14px 20px;
+  font-weight: 500; font-size: 14.5px;
+  list-style: none; display: flex; align-items: center; gap: 10px;
+  user-select: none;
+}
+details.about summary::-webkit-details-marker { display: none; }
+details.about summary::before {
+  content: "▶"; font-size: 10px; color: var(--ink-soft);
+  transition: transform .15s; display: inline-block;
+}
+details.about[open] summary::before { transform: rotate(90deg); }
+details.about summary:hover { background: var(--bg); }
+details.about .body {
+  padding: 4px 22px 22px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-size: 14px;
+  line-height: 1.7;
+}
+details.about .body p { margin: 10px 0; }
+details.about .body a { color: var(--accent); }
+details.about .body ul { margin: 8px 0; padding-left: 20px; }
+details.about .body li { margin: 4px 0; }
+details.about .body h4 { color: var(--ink); margin: 16px 0 6px; font-size: 14px; }
+details.about .disclaimer {
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: var(--bg);
+  border-radius: 6px;
+  font-size: 12.5px;
+  border-left: 3px solid var(--accent);
+}
+
+.explorer-intro {
+  margin: 14px 0 18px;
+}
+.explorer-intro h2 {
+  font-family: var(--serif);
+  font-size: 26px;
+  margin: 0 0 6px;
+  letter-spacing: -0.01em;
+}
+.explorer-intro p {
+  color: var(--ink-soft); margin: 0; font-size: 14.5px; max-width: 640px;
+}
+
+button, .btn {
+  background: var(--panel); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 8px;
+  padding: 7px 12px; font-size: 13px;
+  font-family: inherit; cursor: pointer;
+}
+button:hover, .btn:hover { background: var(--accent-soft); border-color: var(--accent); }
+
+.builder {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 18px;
+  margin-bottom: 24px;
+  align-items: start;
+}
+@media (max-width: 980px) { .builder { grid-template-columns: 1fr; } }
+
+aside.sidebar {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px;
+  position: sticky;
+  top: 14px;
+  max-height: calc(100vh - 28px);
+  overflow-y: auto;
+}
+@media (max-width: 980px) {
+  aside.sidebar { position: static; max-height: none; }
+}
+.sidebar h3 { margin: 0 0 4px; font-size: 15px; }
+.sidebar .sublabel { font-size: 12.5px; color: var(--ink-soft); margin: 0 0 12px; }
+
+.sidebar-totals {
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+  font-size: 12px;
+}
+.sidebar-totals .row {
+  display: flex; justify-content: space-between;
+  padding: 3px 0;
+}
+.sidebar-totals .row .lbl { color: var(--ink-soft); }
+.sidebar-totals .row .val {
+  font-family: var(--mono); font-weight: 600;
+  color: var(--ink);
+}
+.sidebar-totals .row.dpc .val { color: var(--c-dpc); }
+.sidebar-totals .row.cash .val { color: var(--c-cash); }
+.sidebar-totals .savings {
+  border-top: 1px solid var(--line);
+  margin-top: 4px; padding-top: 6px;
+  display: flex; justify-content: space-between;
+  font-size: 12px;
+}
+.sidebar-totals .savings .lbl { color: var(--ink); font-weight: 500; }
+.sidebar-totals .savings .val { font-family: var(--mono); font-weight: 700; color: var(--good); }
+
+.presets { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.presets button { font-size: 11.5px; padding: 4px 10px; border-radius: 999px; }
+.presets button.active {
+  background: var(--accent); color: white; border-color: var(--accent);
+}
+.presets button.active:hover { filter: brightness(1.05); background: var(--accent); border-color: var(--accent); }
+.search-row { display: flex; gap: 6px; margin-bottom: 8px; }
+.search-row input, .search-row select {
+  padding: 6px 10px; border: 1px solid var(--line); border-radius: 6px;
+  background: var(--panel); color: var(--ink); font-family: inherit; font-size: 12.5px;
+  min-width: 0; flex: 1;
+}
+.search-row select { flex: 0 0 auto; }
+.basket-list {
+  max-height: 320px; overflow-y: auto;
+  border: 1px solid var(--line); border-radius: 6px; padding: 4px;
+}
+.basket-row {
+  display: grid; grid-template-columns: auto 1fr auto;
+  gap: 8px; align-items: center;
+  padding: 5px 8px; border-radius: 4px;
+  cursor: pointer; font-size: 12.5px;
+}
+.basket-row:hover { background: var(--accent-soft); }
+.basket-row input[type="checkbox"] { margin: 0; }
+.basket-row .test-name { line-height: 1.3; }
+.basket-row .test-name small {
+  display: block; color: var(--ink-faint);
+  font-family: var(--mono); font-size: 10px;
+}
+.basket-row .dpc-price { font-family: var(--mono); font-size: 11px; color: var(--good); }
+.sidebar-section { border-top: 1px solid var(--line); padding-top: 14px; margin-top: 14px; }
+.sidebar-actions { display: flex; gap: 6px; }
+.sidebar-actions button { flex: 1; font-size: 11.5px; padding: 6px 8px; }
+
+section.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px;
+  margin-bottom: 22px;
+  box-shadow: var(--shadow);
+}
+section.panel h2 { margin: 0 0 4px; font-size: 18px; }
+section.panel .desc { color: var(--ink-soft); font-size: 13.5px; margin: 0 0 16px; }
+
+.table-controls {
+  display: flex; gap: 8px; margin-bottom: 12px;
+  flex-wrap: wrap; align-items: center;
+}
+.table-controls input, .table-controls select {
+  padding: 6px 10px; border: 1px solid var(--line); border-radius: 6px;
+  background: var(--panel); color: var(--ink); font-family: inherit; font-size: 13px;
+}
+.table-controls input { flex: 1; min-width: 160px; }
+
+table.comparison { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.comparison th, table.comparison td {
+  padding: 8px; text-align: right;
+  border-bottom: 1px solid var(--line); white-space: nowrap;
+}
+table.comparison th:first-child, table.comparison td:first-child {
+  text-align: left; white-space: normal;
+}
+table.comparison th {
+  font-weight: 600; color: var(--ink-soft);
+  font-size: 11px; text-transform: uppercase; letter-spacing: .04em;
+  cursor: pointer; user-select: none;
+  position: sticky; top: 0; background: var(--panel); z-index: 1;
+}
+table.comparison th:hover { color: var(--ink); }
+table.comparison th .sort-arrow { opacity: .35; margin-left: 2px; font-size: 9px; }
+table.comparison th.sorted .sort-arrow { opacity: 1; color: var(--accent); }
+table.comparison tbody tr { cursor: pointer; }
+table.comparison tbody tr:hover { background: var(--accent-soft); }
+table.comparison tbody tr.selected { background: var(--accent-soft); }
+table.comparison .num { font-family: var(--mono); }
+table.comparison .test-name-cell { min-width: 200px; }
+table.comparison .test-name-cell .cpt-tag {
+  font-family: var(--mono); font-size: 10px; color: var(--ink-faint); margin-left: 6px;
+}
+.markup-badge {
+  display: inline-block; padding: 2px 8px; border-radius: 999px;
+  font-family: var(--mono); font-weight: 600; font-size: 11px;
+}
+.markup-badge.lo { background: var(--good-soft); color: var(--good); }
+.markup-badge.med { background: #fef3c7; color: var(--warn); }
+.markup-badge.hi { background: var(--bad-soft); color: var(--bad); }
+[data-theme="dark"] .markup-badge.med { background: #3a2c0a; color: var(--warn); }
+.range-bar { width: 200px; }
+.table-scroll {
+  max-height: 640px; overflow-y: auto;
+  border: 1px solid var(--line); border-radius: 8px;
+}
+
+.drilldown-empty {
+  padding: 36px 20px; text-align: center;
+  color: var(--ink-soft); font-size: 14px;
+}
+.drilldown-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 28px;
+}
+@media (max-width: 900px) { .drilldown-grid { grid-template-columns: 1fr; } }
+.drilldown-meta {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 12px;
+}
+.drilldown-meta .item {
+  background: var(--bg); padding: 6px 10px;
+  border-radius: 6px; font-size: 12px;
+}
+.drilldown-meta .item .lbl { color: var(--ink-soft); font-size: 11px; }
+.drilldown-meta .item .val { font-family: var(--mono); font-weight: 600; font-size: 14px; }
+.boxplot-svg { width: 100%; height: 90px; display: block; }
+.markup-narrative {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.markup-narrative p { margin: 0 0 10px; }
+.markup-narrative p:last-child { margin-bottom: 0; }
+
+.toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--ink); color: var(--panel);
+  padding: 10px 18px; border-radius: 8px; font-size: 13px;
+  opacity: 0; transition: opacity .2s, transform .2s;
+  pointer-events: none; z-index: 100;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Insurance pitfalls section */
+section.panel.pitfalls {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 26px 28px;
+  margin-bottom: 22px;
+  box-shadow: var(--shadow);
+}
+.pitfalls-title {
+  font-family: var(--serif);
+  font-size: 24px;
+  letter-spacing: -0.01em;
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+.pitfalls-intro {
+  color: var(--ink-soft);
+  margin: 0 0 20px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  max-width: 720px;
+}
+.pitfalls-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+@media (max-width: 720px) { .pitfalls-grid { grid-template-columns: 1fr; } }
+.pitfall-card {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--line-strong);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.pitfall-card.lo { border-left-color: var(--good); }
+.pitfall-card.med { border-left-color: var(--warn); }
+.pitfall-card.hi { border-left-color: var(--bad); }
+.pitfall-card .severity {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  font-weight: 600;
+  color: var(--ink-soft);
+  margin-bottom: 4px;
+}
+.pitfall-card.lo .severity { color: var(--good); }
+.pitfall-card.med .severity { color: var(--warn); }
+.pitfall-card.hi .severity { color: var(--bad); }
+.pitfall-card h3 {
+  margin: 0 0 6px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.pitfall-card .desc {
+  margin: 0 0 12px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+.pitfall-card .impact {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.pitfall-card .amount {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.pitfall-card.hi .amount { color: var(--bad); }
+.pitfall-card.med .amount { color: var(--warn); }
+.pitfall-card.lo .amount { color: var(--good); }
+.pitfall-card .vs {
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
+.pitfall-card .vs .formula {
+  display: block;
+  font-family: var(--mono);
+  color: var(--ink-faint);
+  margin-top: 2px;
+}
+.pitfall-explainer {
+  margin-top: 20px;
+  padding: 14px 16px;
+  background: var(--bg);
+  border-radius: 8px;
+  border-left: 3px solid var(--accent);
+}
+.pitfall-explainer summary {
+  cursor: pointer;
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+  font-size: 13.5px;
+  font-weight: 500;
+}
+.pitfall-explainer summary::-webkit-details-marker { display: none; }
+.pitfall-explainer summary::before {
+  content: "▶";
+  font-size: 9px;
+  color: var(--accent);
+  transition: transform .2s;
+  display: inline-block;
+}
+.pitfall-explainer[open] summary::before { transform: rotate(90deg); }
+.pitfall-explainer summary:hover { text-decoration: underline; }
+.pitfall-explainer .body {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.65;
+}
+.pitfall-explainer .body p { margin: 8px 0; }
+.pitfall-explainer .body ul { margin: 6px 0; padding-left: 20px; }
+.pitfall-explainer .body li { margin: 4px 0; }
+.pitfall-explainer .body b { color: var(--ink); }
+
+@media print {
+  nav.top, .table-controls, .sidebar-actions, #drilldownSection,
+  .search-row, .presets, details.about summary::before { display: none !important; }
+  details.about[open] .body { display: block !important; }
+  body { background: white; }
+  section.story, section.panel, .stat, details.about, aside.sidebar { box-shadow: none; border: 1px solid #ccc; }
+  aside.sidebar { position: static; max-height: none; }
+  a { color: inherit; text-decoration: underline; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap-wide">
+<nav class="top">
+  <button id="shareTop">Share</button>
+  <button id="themeToggle">Dark mode</button>
+  <button id="printBtn">Print</button>
+</nav>
+</div>
+
+<div class="wrap">
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <h1>Same blood test. Wildly different prices.</h1>
+  <p class="deck">It depends entirely on who is paying.</p>
+
+  <p class="lede">A complete blood count (CBC) costs <span class="green">$2.55</span> at wholesale &mdash; the rate a reference lab charges when a Direct Primary Care clinic orders the test directly, outside the insurance billing system. That price is passed through to the patient. MarinHealth Medical Center's posted list price for the same blood draw is <span class="red">$394</span> &mdash; a <span class="num">154×</span> markup over the underlying cost of the test.</p>
+
+  <p class="lede">The pattern repeats across the data. Across 27 common primary-care lab tests, MarinHealth's posted cash price averages <b><span class="num">54×</span> the wholesale cost</b>. List prices average <b><span class="num">90×</span></b>. Insured patients rarely see those numbers &mdash; their plan negotiates a much lower rate behind the scenes. But people who are uninsured, between plans, or on high-deductible plans before they hit their deductible generally pay the full posted price.</p>
+
+  <div class="source-note">
+    All MarinHealth pricing on this page comes directly from the hospital's own <a href="https://www.mymarinhealth.org/patients-visitors/medical-center-patients-visitors/billing-insurance/pricing-transparency/" target="_blank" rel="noopener">Pricing Transparency page</a>, where it is published in compliance with federal hospital price transparency rules. Methodology and full sources are <a href="#" onclick="document.querySelector('details.about').open=true;document.querySelector('details.about').scrollIntoView({behavior:'smooth'});return false;">below</a>.
+  </div>
+</section>
+
+<!-- ============ STORY / SCENARIO ============ -->
+<section class="story" id="storySection">
+  <h2 class="question">How would you be paying for these labs?</h2>
+  <p class="basket-hint">We're pricing a typical <a id="changeBasketLink" class="basket-trigger" title="Click to change the basket"><b id="basketLabel">annual checkup</b></a> &mdash; CBC, comprehensive metabolic panel, hemoglobin A1c, and lipid panel.</p>
+
+  <div class="scenario-grid">
+    <button class="scenario-btn active" data-scenario="dpc">
+      <div class="sc-emoji">🏥</div>
+      <div class="sc-label">DPC clinic</div>
+      <div class="sc-sub">Direct Primary Care, lab ordered outside insurance</div>
+    </button>
+    <button class="scenario-btn" data-scenario="medicare">
+      <div class="sc-warn" title="Coverage gaps and Medicare Advantage networks can change this">⚠ caveats</div>
+      <div class="sc-emoji">📋</div>
+      <div class="sc-label">Medicare</div>
+      <div class="sc-sub">Federal reimbursement rate</div>
+    </button>
+    <button class="scenario-btn" data-scenario="insurance">
+      <div class="sc-warn" title="Deductibles, denials, and out-of-network labs can change this">⚠ caveats</div>
+      <div class="sc-emoji">💳</div>
+      <div class="sc-label">With insurance</div>
+      <div class="sc-sub">Typical commercial plan</div>
+    </button>
+    <button class="scenario-btn" data-scenario="cash">
+      <div class="sc-emoji">💵</div>
+      <div class="sc-label">No insurance</div>
+      <div class="sc-sub">Hospital cash price</div>
+    </button>
+  </div>
+
+  <div class="story-result" id="storyResult"></div>
+
+  <div class="story-chart-host"><canvas id="storyChart"></canvas></div>
+
+  <div class="tier-tiles" id="tierTiles"></div>
+
+  <details class="glossary">
+    <summary>What do these terms mean?</summary>
+    <div class="glossary-body">
+      <div class="gloss-item">
+        <h4><span class="dot" style="background:var(--c-dpc)"></span>DPC clinic</h4>
+        <p>Direct Primary Care clinics are membership-based primary care practices that order labs directly from reference labs, outside the insurance billing system. The wholesale price the lab charges in that arrangement is what the patient pays &mdash; the clinic typically adds little or no markup.</p>
+      </div>
+      <div class="gloss-item">
+        <h4><span class="dot" style="background:var(--c-medicare)"></span>Medicare</h4>
+        <p>The federally set rate Medicare pays the hospital, defined by the CMS Clinical Lab Fee Schedule. It's the same nationwide for any given lab test.</p>
+      </div>
+      <div class="gloss-item">
+        <h4><span class="dot" style="background:var(--c-insurance)"></span>With insurance</h4>
+        <p>The negotiated rate a typical commercial insurance plan pays the hospital. Patients usually don't see this number directly &mdash; their copay or coinsurance is a fraction of it.</p>
+      </div>
+      <div class="gloss-item">
+        <h4><span class="dot" style="background:var(--c-cash)"></span>Hospital cash</h4>
+        <p>The price MarinHealth charges patients paying out-of-pocket without insurance. It's the list price minus a 40% self-pay discount the hospital applies at time of service.</p>
+      </div>
+      <div class="gloss-item" style="grid-column: 1 / -1;">
+        <h4><span class="dot" style="background:var(--c-gross)"></span>Hospital list (chargemaster)</h4>
+        <p>The hospital's official posted price before any discount or insurance negotiation. Almost no one actually pays this number directly &mdash; it functions as the starting point for insurance negotiations and as the basis from which the cash discount is calculated.</p>
+      </div>
+    </div>
+  </details>
+</section>
+
+<!-- ============ INSURANCE PITFALLS ============ -->
+<section class="panel pitfalls" id="pitfallsSection">
+  <h2 class="pitfalls-title">"With insurance" doesn't always mean what you think</h2>
+  <p class="pitfalls-intro">When everything goes smoothly, your plan negotiates a low rate &mdash; the "<b>allowed amount</b>" &mdash; and you pay only a copay or a small percentage of it. But several common situations break that protection and leave you paying much more, sometimes the full hospital cash price. Here's what each scenario costs for the basket of <b id="pitfallBasket">4 tests</b> selected above.</p>
+
+  <div class="pitfalls-grid" id="pitfallsGrid"></div>
+
+  <details class="pitfall-explainer">
+    <summary>What is the "allowed amount" and why does it matter?</summary>
+    <div class="body">
+      <p>When you have insurance, your insurer and the hospital have agreed on a negotiated rate for each service &mdash; called the <b>allowed amount</b>. When the system works as designed:</p>
+      <ul>
+        <li>Your <b>copay</b>, <b>deductible</b>, and <b>coinsurance</b> all apply to the allowed amount, not the hospital's full list price.</li>
+        <li>The hospital writes off the gap between its list price and the allowed amount as a contractual adjustment.</li>
+        <li>For example, on a $309 cash blood draw, your insurance plan might have an allowed amount of $20. With 20% coinsurance after deductible, you'd pay $4.</li>
+      </ul>
+      <p>But the allowed-amount protection breaks down in several common situations:</p>
+      <ul>
+        <li><b>Out-of-network labs</b>: even at an in-network facility, the lab itself may not be in your plan's network. Your coinsurance can then be calculated against the hospital's <i>billed charges</i> (the chargemaster) instead of a negotiated rate &mdash; a much higher number.</li>
+        <li><b>Denied claims</b>: if your plan denies prior authorization, deems the test "not medically necessary," or rejects it as a non-covered service, there is no allowed amount &mdash; you owe the full cash price.</li>
+        <li><b>Before the deductible is met</b>: you pay 100% of the allowed amount yourself, not just a percentage of it. With a $5,000 deductible, all your routine labs come out of pocket until you hit that number.</li>
+      </ul>
+    </div>
+  </details>
+</section>
+
+</div><!-- /wrap -->
+
+<!-- ============ EXPLORER (wide, moved up) ============ -->
+<div class="wrap-wide">
+
+<div class="explorer-intro" id="explorer">
+  <h2>Walk through the data</h2>
+  <p>Build a different basket of tests, browse all 27 labs, or click into any single test for the full distribution of what insurance plans pay. The chart and totals above update live as you change the basket.</p>
+</div>
+
+<div class="builder">
+  <aside class="sidebar">
+    <h3>Build your basket</h3>
+    <p class="sublabel">Add or remove tests &mdash; the chart above updates live.</p>
+
+    <div class="sidebar-totals" id="sidebarTotals"></div>
+
+    <div class="presets">
+      <button data-preset="annual">Annual checkup</button>
+      <button data-preset="diabetes">Diabetes f/u</button>
+      <button data-preset="thyroid">Thyroid</button>
+      <button data-preset="sti">STI screen</button>
+      <button data-preset="iron">Iron studies</button>
+      <button data-preset="all">All</button>
+      <button data-preset="none">Clear</button>
+    </div>
+
+    <div class="search-row">
+      <input id="basketSearch" placeholder="Search...">
+      <select id="basketCategory"><option value="">All</option></select>
+    </div>
+    <div class="basket-list" id="basketList"></div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-actions">
+        <button id="exportCsvBtn">Export CSV</button>
+        <button id="shareBtn">Copy link</button>
+      </div>
+    </div>
+  </aside>
+
+  <section class="panel">
+    <h2>Per-test price comparison</h2>
+    <p class="desc">All 27 tests, sortable. Click a row to see its full price distribution and breakdown.</p>
+    <div class="table-controls">
+      <input id="tableSearch" placeholder="Search by test name or code...">
+      <select id="tableCategory"><option value="">All categories</option></select>
+    </div>
+    <div class="table-scroll">
+      <table class="comparison" id="comparisonTable">
+        <thead>
+          <tr>
+            <th data-key="name">Test <span class="sort-arrow">▲</span></th>
+            <th data-key="medicare">Medicare <span class="sort-arrow">▲</span></th>
+            <th data-key="insMedian">Insurance <span class="sort-arrow">▲</span></th>
+            <th data-key="cash">Hosp. cash <span class="sort-arrow">▲</span></th>
+            <th data-key="gross">Hosp. list <span class="sort-arrow">▲</span></th>
+            <th data-key="dpc">DPC <span class="sort-arrow">▲</span></th>
+            <th data-key="cashOverDpc">Cash markup <span class="sort-arrow">▲</span></th>
+            <th>Range</th>
+          </tr>
+        </thead>
+        <tbody id="comparisonBody"></tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<section class="panel" id="drilldownSection">
+  <h2 id="drilldownTitle">Test detail</h2>
+  <p class="desc" id="drilldownDesc">Click any row in the table above to see the full price breakdown for that test.</p>
+  <div id="drilldownContent" class="drilldown-empty">No test selected.</div>
+</section>
+
+</div><!-- /wrap-wide -->
+
+<!-- ============ STATS + ABOUT (moved below explorer) ============ -->
+<div class="wrap">
+
+<div class="stats" id="statsRow"></div>
+
+<details class="about">
+  <summary>About this tool, the data, and methodology</summary>
+  <div class="body">
+    <p><b>What this is.</b> A side-by-side price comparison for 27 common lab tests. For each test, you can see what Medicare pays, what commercial insurance pays, what the hospital charges someone paying out-of-pocket, and what a Direct Primary Care (DPC) clinic typically pays at wholesale.</p>
+    <p><b>Why it matters.</b> Insured patients with low deductibles rarely see hospital list or cash prices &mdash; their plan negotiates a different rate behind the scenes. But for the uninsured, the underinsured, and patients on high-deductible plans, the difference between paying through a hospital versus a DPC clinic can run into the thousands of dollars per year for routine lab work.</p>
+    <h4>Where the data comes from</h4>
+    <ul>
+      <li><b>MarinHealth prices</b> are taken directly from MarinHealth Medical Center's own price list (the "machine-readable file" version 3.0.0, last updated March 26, 2026), which the hospital publishes on its <a href="https://www.mymarinhealth.org/patients-visitors/medical-center-patients-visitors/billing-insurance/pricing-transparency/" target="_blank" rel="noopener">Pricing Transparency page</a>. The "cash" prices used here match what the hospital's own consumer pricing tool shows.</li>
+      <li><b>Medicare and commercial insurance rates</b> come from the same file. The Medicare rate matches the published 2025 Medicare Clinical Lab Fee Schedule.</li>
+      <li><b>DPC wholesale prices</b> are the cheapest publicly posted rates from independent DPC clinics and reference labs (Iron DPC, Birmingham DPC, Simplicity DPC, Access Med Labs) as of April 2026.</li>
+    </ul>
+    <h4>Methodology notes</h4>
+    <ul>
+      <li>The "hospital cash" and "hospital list" prices use the most common ("modal") price line for each test code in MarinHealth's file, which matches the hospital's own consumer pricing tool. A few outlier line items are excluded.</li>
+      <li>The hospital's cash price is consistently 60% of its list price &mdash; that's the 40% self-pay discount applied at time of service.</li>
+      <li>Commercial insurance figures exclude a $2,330 default contract ceiling that appears across many tests but doesn't reflect real pricing.</li>
+      <li>Chlamydia and Gonorrhea NAATs are billed separately at MarinHealth ($318 each) but typically ordered together as a pair; DPC pricing of $15 for the bundle is split as $7.50 each here.</li>
+    </ul>
+    <h4>About the framing</h4>
+    <p>Hospital pricing reflects a mix of regulatory requirements, contract negotiations, charity-care obligations, and cross-subsidization that is largely invisible to the individual patient. The aim of this tool is simply to make those price differences visible so patients can navigate them.</p>
+    <div class="disclaimer">
+      For information only &mdash; not medical, legal, or financial advice. Real prices for an individual patient depend on insurance coverage, contract terms, and other factors. Confirm pricing with your provider before scheduling care.
+    </div>
+  </div>
+</details>
+
+</div><!-- /wrap -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+const TESTS = [
+  {name:"CBC w/ Differential",cpt:"85025",cat:"Hematology",medicare:7.77,insN:180,insMin:1.06,insMedian:30.24,insMean:29.43,insMax:53.08,gross:394,cash:236.4,dpc:2.55,dpcSrc:"Iron DPC"},
+  {name:"Comprehensive Metabolic Panel (CMP)",cpt:"80053",cat:"Chemistry",medicare:10.56,insN:156,insMin:10.56,insMedian:15.72,insMean:30.83,insMax:72.14,gross:530,cash:318,dpc:3,dpcSrc:"Birmingham DPC"},
+  {name:"Basic Metabolic Panel (BMP)",cpt:"80048",cat:"Chemistry",medicare:8.46,insN:153,insMin:8.46,insMedian:12.57,insMean:24.60,insMax:57.79,gross:472,cash:283.2,dpc:2.5,dpcSrc:"DPC Wholesale"},
+  {name:"Hemoglobin A1c",cpt:"83036",cat:"Endocrine",medicare:9.71,insN:370,insMin:6.30,insMedian:15.54,insMean:29.98,insMax:66.33,gross:286,cash:171.6,dpc:3.75,dpcSrc:"DPC Wholesale"},
+  {name:"Lipid Panel",cpt:"80061",cat:"Lipids",medicare:13.39,insN:176,insMin:13.39,insMedian:19.89,insMean:39.17,insMax:91.47,gross:516,cash:309.6,dpc:3.52,dpcSrc:"DPC Wholesale"},
+  {name:"TSH",cpt:"84443",cat:"Endocrine",medicare:16.80,insN:276,insMin:16.80,insMedian:21.00,insMean:49.46,insMax:114.76,gross:469,cash:281.4,dpc:3,dpcSrc:"DPC Wholesale"},
+  {name:"Free T4",cpt:"84439",cat:"Endocrine",medicare:9.02,insN:312,insMin:8.52,insMedian:11.28,insMean:25.67,insMax:61.62,gross:306,cash:183.6,dpc:3.5,dpcSrc:"DPC Wholesale"},
+  {name:"Urinalysis with Microscopy",cpt:"81001",cat:"Urine",medicare:3.17,insN:171,insMin:3.17,insMedian:15.06,insMean:12.61,insMax:21.65,gross:208,cash:124.8,dpc:2.5,dpcSrc:"DPC Wholesale"},
+  {name:"Urine Culture",cpt:"87086",cat:"Urine",medicare:8.07,insN:240,insMin:1.10,insMedian:31.42,insMean:30.77,insMax:55.13,gross:349,cash:209.4,dpc:8,dpcSrc:"Simplicity DPC"},
+  {name:"PSA, Total",cpt:"84153",cat:"Cancer Screening",medicare:18.39,insN:252,insMin:10.08,insMedian:22.99,insMean:51.35,insMax:125.62,gross:512,cash:307.2,dpc:3.8,dpcSrc:"DPC Wholesale"},
+  {name:"Vitamin D, 25-Hydroxy",cpt:"82306",cat:"Vitamins",medicare:29.60,insN:224,insMin:20,insMedian:37,insMean:84.41,insMax:202.20,gross:265,cash:159,dpc:13,dpcSrc:"Iron DPC"},
+  {name:"Vitamin B12",cpt:"82607",cat:"Vitamins",medicare:15.08,insN:184,insMin:6.30,insMedian:18.85,insMean:42.40,insMax:103.01,gross:291,cash:174.6,dpc:5.41,dpcSrc:"Access Med Labs"},
+  {name:"Ferritin",cpt:"82728",cat:"Iron Studies",medicare:13.63,insN:196,insMin:13.63,insMedian:20.24,insMean:39.94,insMax:93.11,gross:300,cash:180,dpc:2.20,dpcSrc:"Iron DPC"},
+  {name:"Serum Iron",cpt:"83540",cat:"Iron Studies",medicare:6.47,insN:156,insMin:6.47,insMedian:9.62,insMean:18.89,insMax:44.20,gross:191,cash:114.6,dpc:3,dpcSrc:"DPC Wholesale"},
+  {name:"TIBC (Total Iron Binding Capacity)",cpt:"83550",cat:"Iron Studies",medicare:8.74,insN:176,insMin:8.74,insMedian:10.93,insMean:25.44,insMax:59.70,gross:260,cash:156,dpc:3,dpcSrc:"DPC Wholesale"},
+  {name:"Magnesium",cpt:"83735",cat:"Chemistry",medicare:6.70,insN:312,insMin:4.17,insMedian:8.38,insMean:19.21,insMax:45.77,gross:252,cash:151.2,dpc:1.57,dpcSrc:"Access Med Labs"},
+  {name:"Uric Acid",cpt:"84550",cat:"Chemistry",medicare:4.52,insN:116,insMin:4.52,insMedian:6.72,insMean:13.11,insMax:30.88,gross:197,cash:118.2,dpc:1.62,dpcSrc:"Access Med Labs"},
+  {name:"hsCRP (high-sensitivity)",cpt:"86141",cat:"Inflammation",medicare:12.95,insN:162,insMin:12.95,insMedian:34.64,insMean:45.86,insMax:88.46,gross:210,cash:126,dpc:4,dpcSrc:"DPC Wholesale"},
+  {name:"Creatinine, Standalone",cpt:"82565",cat:"Chemistry",medicare:5.12,insN:192,insMin:5.12,insMedian:7.90,insMean:14.76,insMax:34.97,gross:194,cash:116.4,dpc:2,dpcSrc:"DPC Wholesale"},
+  {name:"Hepatitis C Antibody",cpt:"86803",cat:"Infectious / STI",medicare:14.27,insN:160,insMin:1.10,insMedian:37.10,insMean:46.37,insMax:97.48,gross:237,cash:142.2,dpc:8,dpcSrc:"DPC Wholesale"},
+  {name:"HIV 4th Generation (Ag/Ab)",cpt:"87389",cat:"Infectious / STI",medicare:24.08,insN:140,insMin:12,insMedian:62.61,insMean:79.54,insMax:164.49,gross:368,cash:220.8,dpc:10,dpcSrc:"DPC Wholesale"},
+  {name:"Chlamydia NAAT",cpt:"87491",cat:"Infectious / STI",medicare:35.09,insN:112,insMin:21,insMedian:96.50,insMean:125.78,insMax:239.70,gross:318,cash:190.8,dpc:7.5,dpcSrc:"DPC (½ of $15 GC/CT bundle)"},
+  {name:"GC NAAT (Gonorrhea)",cpt:"87591",cat:"Infectious / STI",medicare:35.09,insN:112,insMin:21,insMedian:96.50,insMean:125.78,insMax:239.70,gross:318,cash:190.8,dpc:7.5,dpcSrc:"DPC (½ of $15 GC/CT bundle)"},
+  {name:"Microalbumin/Creatinine Ratio",cpt:"82043",cat:"Urine",medicare:5.78,insN:68,insMin:5.78,insMedian:8.60,insMean:16.82,insMax:39.48,gross:190.32,cash:114.19,dpc:4,dpcSrc:"DPC Wholesale"},
+  {name:"PT/INR",cpt:"85610",cat:"Coagulation",medicare:4.29,insN:268,insMin:4.29,insMedian:11.80,insMean:16.18,insMax:29.30,gross:210,cash:126,dpc:3.5,dpcSrc:"DPC Wholesale"},
+  {name:"Blood Culture",cpt:"87040",cat:"Microbiology",medicare:10.32,insN:137,insMin:10.32,insMedian:49.02,insMean:40.56,insMax:70.50,gross:589,cash:353.4,dpc:8,dpcSrc:"DPC Wholesale"},
+  {name:"Strep Culture",cpt:"87070",cat:"Microbiology",medicare:8.62,insN:259,insMin:7.70,insMedian:23.71,insMean:31.07,insMax:58.88,gross:340,cash:204,dpc:6,dpcSrc:"DPC Wholesale"},
+];
+TESTS.forEach(t => {
+  t.cashOverDpc = (t.cash != null && t.dpc != null) ? t.cash / t.dpc : null;
+  t.grossOverDpc = (t.gross != null && t.dpc != null) ? t.gross / t.dpc : null;
+  t.cashOverMedicare = (t.cash != null && t.medicare != null) ? t.cash / t.medicare : null;
+});
+
+const PRESETS = {
+  annual:   { cpts: ["85025","80053","83036","80061"],          label: "annual checkup" },
+  diabetes: { cpts: ["85025","80053","83036","80061","82043"],   label: "diabetes follow-up" },
+  thyroid:  { cpts: ["84443","84439"],                            label: "thyroid panel" },
+  sti:      { cpts: ["86803","87389","87491","87591"],            label: "STI screen" },
+  iron:     { cpts: ["82728","83540","83550","85025"],            label: "iron studies" },
+};
+
+const TIER = {
+  dpc:       { color:"#047857", label:"DPC clinic",         tile:"DPC clinic",          long:"a Direct Primary Care clinic"},
+  medicare:  { color:"#0891b2", label:"Medicare",            tile:"Medicare",            long:"Medicare"},
+  insurance: { color:"#1e40af", label:"Insurance (typical)", tile:"Insurance (typical)", long:"a typical commercial insurance plan"},
+  cash:      { color:"#dc2626", label:"Hospital cash",       tile:"Hospital cash",       long:"the hospital's cash price"},
+  gross:     { color:"#7c2d12", label:"Hospital list",       tile:"Hospital list",       long:"the hospital's list price"},
+};
+
+const TIER_INFO = {
+  dpc:       "Wholesale lab rate, paid by patients when DPC clinics order tests directly outside the insurance billing system.",
+  medicare:  "Federal CMS reimbursement rate (Clinical Lab Fee Schedule).",
+  insurance: "What a typical commercial insurance plan negotiates with the hospital.",
+  cash:      "What MarinHealth charges patients paying out-of-pocket without insurance (40% off list).",
+  gross:     "Hospital chargemaster list price. Almost no one pays this directly.",
+};
+
+const state = {
+  basket: new Set(PRESETS.annual.cpts),
+  basketName: "annual checkup",
+  activePreset: "annual",
+  basketSearch: "",
+  basketCategory: "",
+  scenario: "dpc",
+  tableSearch: "",
+  tableCategory: "",
+  tableSort: { key: "cashOverDpc", dir: "desc" },
+  selectedCpt: null,
+};
+
+function readHash() {
+  const m = location.hash.match(/basket=([\w,]+)/);
+  if (m) {
+    const cpts = m[1].split(",").filter(c => TESTS.some(t => t.cpt === c));
+    if (cpts.length) {
+      state.basket = new Set(cpts);
+      state.basketName = "your basket";
+      state.activePreset = matchPreset(cpts);
+    }
+  }
+}
+function matchPreset(cpts) {
+  const set = new Set(cpts);
+  for (const [k, v] of Object.entries(PRESETS)) {
+    if (v.cpts.length === set.size && v.cpts.every(c => set.has(c))) return k;
+  }
+  return null;
+}
+readHash();
+
+const fmt$ = v => v == null ? "—" : "$" + v.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+const fmt$0 = v => v == null ? "—" : "$" + Math.round(v).toLocaleString();
+const fmt$smart = v => {
+  if (v == null) return "—";
+  if (v < 10) return "$" + v.toFixed(2);
+  if (v < 100) return "$" + v.toFixed(1);
+  return "$" + Math.round(v).toLocaleString();
+};
+const categories = [...new Set(TESTS.map(t => t.cat))].sort();
+
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+function basketTotals() {
+  const selected = TESTS.filter(t => state.basket.has(t.cpt));
+  const tally = key => selected.reduce((s, t) => s + (t[key] || 0), 0);
+  return {
+    selected,
+    dpc: tally("dpc"),
+    medicare: tally("medicare"),
+    insurance: tally("insMedian"),
+    cash: tally("cash"),
+    gross: tally("gross"),
+  };
+}
+
+function renderStory() {
+  const t = basketTotals();
+  const sc = state.scenario;
+  const total = t[sc];
+
+  document.getElementById("basketLabel").textContent = state.basketName;
+
+  let headline = "If you pay through " + TIER[sc].long + ", these labs cost about";
+  let narrative = "";
+  if (t.selected.length === 0) {
+    headline = "Your basket is empty";
+    document.getElementById("storyResult").innerHTML = `
+      <p class="story-headline">&nbsp;</p>
+      <div class="story-bignum">$0</div>
+      <p class="story-narrative">Pick at least one test below to see prices.</p>`;
+    drawStoryChart(t);
+    renderTierTiles(t);
+    renderSidebarTotals(t);
+    return;
+  }
+
+  if (sc === "dpc") {
+    narrative = `That's the wholesale rate reference labs charge when a DPC clinic orders these tests directly, outside the insurance billing system. The clinic passes that price through to the patient with little or no markup.<br><br>
+      The same basket would run <span class="num red">${fmt$0(t.cash)}</span> if you walked into MarinHealth without insurance &mdash; <b><span class="num red">${(t.cash/total).toFixed(0)}× more</span></b>. Switching to a DPC clinic for these labs would save <b><span class="num green">${fmt$0(t.cash - total)}</span></b> a year.`;
+  } else if (sc === "medicare") {
+    narrative = `That's the federally set rate. It's <span class="num">${(total/t.dpc).toFixed(1)}×</span> the DPC wholesale price &mdash; reasonable, but still more than what reference labs charge directly.<br><br>
+      If you didn't have Medicare and walked in to pay cash, the same basket would cost <b><span class="num red">${fmt$0(t.cash)}</span></b> &mdash; <span class="num red">${(t.cash/total).toFixed(0)}×</span> the Medicare rate.<br>
+      <a class="story-warning-link" data-jump="pitfalls">⚠ Coverage gaps, Medicare Advantage networks, and denied claims can change this number &mdash; see what can go wrong ↓</a>`;
+  } else if (sc === "insurance") {
+    narrative = `That's what a typical commercial insurance plan pays MarinHealth for these tests &mdash; you don't see this number, but your plan negotiated it. If you have a copay, your share is a fraction of this.<br><br>
+      A patient walking in <i>without</i> insurance is asked to pay <b><span class="num red">${fmt$0(t.cash)}</span></b> for the same basket. That's <b><span class="num red">${(t.cash/total).toFixed(0)}× more</span></b> than what your insurance plan would pay.<br>
+      <a class="story-warning-link" data-jump="pitfalls">⚠ Several common situations can leave you paying much more than this &mdash; see what can go wrong ↓</a>`;
+  } else if (sc === "cash") {
+    narrative = `That's the price MarinHealth charges someone paying out-of-pocket &mdash; it's already discounted 40% off the hospital list price. <br><br>
+      The same basket of tests costs <b><span class="num green">${fmt$0(t.dpc)}</span></b> through a DPC clinic &mdash; that's <b><span class="num red">${(total/t.dpc).toFixed(0)}× cheaper</span></b>. A patient with insurance would have their plan pay roughly <b><span class="num">${fmt$0(t.insurance)}</span></b> for the same tests.`;
+  }
+
+  document.getElementById("storyResult").innerHTML = `
+    <p class="story-headline">${headline}</p>
+    <div class="story-bignum ${sc}">${fmt$0(total)}</div>
+    <p class="story-narrative">${narrative}</p>`;
+
+  document.querySelectorAll('.story-warning-link[data-jump="pitfalls"]').forEach(a => {
+    a.addEventListener("click", e => {
+      e.preventDefault();
+      const target = document.getElementById("pitfallsSection");
+      if (target) {
+        target.scrollIntoView({behavior: "smooth", block: "start"});
+        const explainer = target.querySelector("details.pitfall-explainer");
+        if (explainer) explainer.open = true;
+      }
+    });
+  });
+
+  document.querySelectorAll(".scenario-btn").forEach(b => {
+    b.classList.toggle("active", b.dataset.scenario === sc);
+  });
+
+  drawStoryChart(t);
+  renderTierTiles(t);
+  renderSidebarTotals(t);
+  renderPitfalls(t);
+}
+
+function renderSidebarTotals(t) {
+  const el = document.getElementById("sidebarTotals");
+  if (!el) return;
+  if (t.selected.length === 0) {
+    el.innerHTML = `<div class="row"><span class="lbl">Empty basket</span></div>`;
+    return;
+  }
+  el.innerHTML = `
+    <div class="row dpc"><span class="lbl">DPC</span><span class="val">${fmt$0(t.dpc)}</span></div>
+    <div class="row"><span class="lbl">Insurance</span><span class="val">${fmt$0(t.insurance)}</span></div>
+    <div class="row cash"><span class="lbl">Hospital cash</span><span class="val">${fmt$0(t.cash)}</span></div>
+    <div class="savings"><span class="lbl">DPC savings</span><span class="val">${fmt$0(t.cash - t.dpc)}</span></div>
+  `;
+}
+
+function renderPitfalls(t) {
+  const el = document.getElementById("pitfallsGrid");
+  const basketCountEl = document.getElementById("pitfallBasket");
+  if (!el) return;
+  const n = t.selected.length;
+  if (basketCountEl) basketCountEl.textContent = n + " test" + (n !== 1 ? "s" : "");
+  if (n === 0) {
+    el.innerHTML = `<div style="grid-column:1/-1;padding:30px;text-align:center;color:var(--ink-soft);font-size:13px;">Pick at least one test above to see how insurance pitfalls affect the cost.</div>`;
+    return;
+  }
+  const coinsuranceRate = 0.20;
+  const bestCase = coinsuranceRate * t.insurance;
+  const beforeDeductible = t.insurance;
+  const oonCoinsurance = coinsuranceRate * t.gross;
+  const denied = t.cash;
+  const dpc = t.dpc;
+
+  const cards = [
+    {
+      severity: "Best case",
+      cls: "lo",
+      title: "Everything goes right",
+      desc: "Your test is in-network and you've already met your deductible. You pay 20% coinsurance on the allowed amount &mdash; standard PPO terms.",
+      formula: "20% × " + fmt$0(t.insurance) + " allowed",
+      amount: bestCase,
+    },
+    {
+      severity: "Common",
+      cls: "med",
+      title: "You haven't met your deductible",
+      desc: "Until you hit your deductible (very common in HDHPs and early in the year), you pay the <b>full</b> negotiated rate yourself &mdash; not a percentage of it.",
+      formula: "100% of allowed amount",
+      amount: beforeDeductible,
+    },
+    {
+      severity: "Surprise bill",
+      cls: "med",
+      title: "The lab is out-of-network",
+      desc: "Even at an in-network hospital, the lab itself may not be in your plan's network. Your coinsurance can then be calculated against the hospital's billed charges (chargemaster), not the negotiated rate.",
+      formula: "20% × " + fmt$0(t.gross) + " billed charges",
+      amount: oonCoinsurance,
+    },
+    {
+      severity: "Worst case",
+      cls: "hi",
+      title: "Insurance refuses to cover the test",
+      desc: "If your plan denies prior authorization, calls the test &quot;not medically necessary,&quot; or rejects it as a non-covered service, your insurance pays nothing. You owe the full hospital cash price.",
+      formula: "Full hospital cash price (no allowed amount)",
+      amount: denied,
+    },
+  ];
+
+  el.innerHTML = cards.map(c => {
+    const ratio = dpc > 0 ? c.amount / dpc : 0;
+    const vsLine = dpc > 0
+      ? `vs <b>${fmt$0(dpc)}</b> at a DPC clinic &mdash; <b>${ratio.toFixed(0)}× more</b>`
+      : "";
+    return `<div class="pitfall-card ${c.cls}">
+      <div class="severity">${c.severity}</div>
+      <h3>${c.title}</h3>
+      <p class="desc">${c.desc}</p>
+      <div class="impact">
+        <div class="amount">${fmt$0(c.amount)}</div>
+        <div class="vs">${vsLine}<span class="formula">${c.formula}</span></div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+let storyChart = null;
+function drawStoryChart(t) {
+  const ctx = document.getElementById("storyChart");
+  if (!ctx) return;
+  if (storyChart) storyChart.destroy();
+  if (t.selected.length === 0) return;
+
+  const cssText = getComputedStyle(document.documentElement);
+  const inkSoft = cssText.getPropertyValue("--ink-soft").trim();
+  const ink = cssText.getPropertyValue("--ink").trim();
+  const line = cssText.getPropertyValue("--line").trim();
+
+  const order = ["dpc","medicare","insurance","cash","gross"];
+  const labels = order.map(k => TIER[k].tile);
+  const values = order.map(k => t[k]);
+  const colors = order.map(k => k === state.scenario ? TIER[k].color : TIER[k].color + "55");
+  const borders = order.map(k => k === state.scenario ? TIER[k].color : "transparent");
+
+  storyChart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [{
+        data: values, backgroundColor: colors,
+        borderColor: borders, borderWidth: 2,
+        borderRadius: 6, borderSkipped: false,
+      }],
+    },
+    options: {
+      indexAxis: "y", responsive: true, maintainAspectRatio: false,
+      animation: { duration: 350 },
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => fmt$(c.parsed.x) } } },
+      scales: {
+        x: { grid: { color: line }, ticks: { color: inkSoft, callback: v => "$" + v.toLocaleString() } },
+        y: { grid: { display: false }, ticks: { color: ink, font: { size: 13, weight: "500" } } },
+      },
+    },
+  });
+}
+
+function renderTierTiles(t) {
+  const tiers = [
+    {key:"dpc", value: t.dpc},
+    {key:"medicare", value: t.medicare},
+    {key:"insurance", value: t.insurance},
+    {key:"cash", value: t.cash},
+    {key:"gross", value: t.gross},
+  ];
+  const dpc = t.dpc;
+  document.getElementById("tierTiles").innerHTML = tiers.map(x => {
+    const sel = x.key === state.scenario ? "selected" : "";
+    let vs = "";
+    if (x.key === "dpc") vs = "wholesale";
+    else if (dpc > 0 && x.value > 0) vs = (x.value / dpc).toFixed(1) + "× DPC";
+    return `<div class="tier-tile ${x.key} ${sel}" data-scenario="${x.key}" title="${TIER_INFO[x.key]}">
+      <div class="label">${TIER[x.key].tile}<span class="info" title="${TIER_INFO[x.key]}">i</span></div>
+      <div class="price">${fmt$0(x.value)}</div>
+      <div class="vs">${vs}</div>
+    </div>`;
+  }).join("");
+  document.querySelectorAll("#tierTiles .tier-tile").forEach(el => {
+    if (el.dataset.scenario === "gross") return;
+    el.style.cursor = "pointer";
+    el.addEventListener("click", () => {
+      state.scenario = el.dataset.scenario;
+      renderStory();
+    });
+  });
+}
+
+function renderStats() {
+  const withData = TESTS.filter(t => t.cash != null);
+  const avgCashOverDpc = withData.reduce((s, t) => s + t.cashOverDpc, 0) / withData.length;
+  const avgGrossOverDpc = withData.reduce((s, t) => s + t.grossOverDpc, 0) / withData.length;
+  const avgCashOverMedicare = withData.reduce((s, t) => s + t.cashOverMedicare, 0) / withData.length;
+  const stats = [
+    {label: "Hospital cash vs DPC", value: avgCashOverDpc.toFixed(0) + "×", hint: "How much more uninsured patients pay at MarinHealth vs a DPC clinic, on average across 27 tests."},
+    {label: "Hospital list vs DPC", value: avgGrossOverDpc.toFixed(0) + "×", hint: "The full chargemaster markup before any self-pay discount."},
+    {label: "Hospital cash vs Medicare", value: avgCashOverMedicare.toFixed(0) + "×", hint: "What an uninsured patient pays vs what Medicare reimburses for the same test."},
+  ];
+  document.getElementById("statsRow").innerHTML = stats.map(s => `
+    <div class="stat">
+      <div class="label">${s.label}</div>
+      <div class="value bad">${s.value}</div>
+      <div class="hint">${s.hint}</div>
+    </div>`).join("");
+}
+
+function renderBasketList() {
+  const search = state.basketSearch.toLowerCase();
+  const cat = state.basketCategory;
+  const filtered = TESTS.filter(t => {
+    if (cat && t.cat !== cat) return false;
+    if (search && !t.name.toLowerCase().includes(search) && !t.cpt.includes(search)) return false;
+    return true;
+  });
+  document.getElementById("basketList").innerHTML = filtered.map(t => {
+    const checked = state.basket.has(t.cpt);
+    return `<label class="basket-row${checked ? ' checked' : ''}">
+      <input type="checkbox" data-cpt="${t.cpt}" ${checked ? "checked" : ""}>
+      <span class="test-name">${t.name}<small>${t.cpt}</small></span>
+      <span class="dpc-price">${fmt$smart(t.dpc)}</span>
+    </label>`;
+  }).join("");
+  document.querySelectorAll("#basketList input[type='checkbox']").forEach(cb => {
+    cb.addEventListener("change", e => {
+      const cpt = e.target.dataset.cpt;
+      if (e.target.checked) state.basket.add(cpt); else state.basket.delete(cpt);
+      state.basketName = "your basket";
+      state.activePreset = matchPreset([...state.basket]);
+      writeHash();
+      renderPresets();
+      renderBasketList();
+      renderStory();
+    });
+  });
+}
+
+function renderPresets() {
+  document.querySelectorAll("[data-preset]").forEach(b => {
+    b.classList.toggle("active", b.dataset.preset === state.activePreset);
+  });
+}
+
+function writeHash() {
+  if (state.basket.size === 0) { history.replaceState(null, "", location.pathname); return; }
+  history.replaceState(null, "", "#basket=" + [...state.basket].join(","));
+}
+
+function renderTable() {
+  const search = state.tableSearch.toLowerCase();
+  const cat = state.tableCategory;
+  let rows = TESTS.filter(t => {
+    if (cat && t.cat !== cat) return false;
+    if (search && !t.name.toLowerCase().includes(search) && !t.cpt.includes(search)) return false;
+    return true;
+  });
+  const {key, dir} = state.tableSort;
+  rows.sort((a, b) => {
+    let av = a[key], bv = b[key];
+    if (av == null && bv == null) return 0;
+    if (av == null) return 1;
+    if (bv == null) return -1;
+    if (typeof av === "string") return dir === "asc" ? av.localeCompare(bv) : bv.localeCompare(av);
+    return dir === "asc" ? av - bv : bv - av;
+  });
+  const allPrices = TESTS.flatMap(t => [t.medicare, t.insMedian, t.cash, t.gross, t.dpc]).filter(v => v != null && v > 0);
+  const pMin = Math.min(...allPrices);
+  const pMax = Math.max(...allPrices);
+  document.getElementById("comparisonBody").innerHTML = rows.map(t => {
+    const m = t.cashOverDpc;
+    let badge = "";
+    if (m != null) {
+      const cls = m >= 60 ? "hi" : m >= 30 ? "med" : "lo";
+      badge = `<span class="markup-badge ${cls}">${m.toFixed(0)}×</span>`;
+    } else badge = `<span class="markup-badge lo">—</span>`;
+    const sel = t.cpt === state.selectedCpt ? "selected" : "";
+    return `<tr data-cpt="${t.cpt}" class="${sel}">
+      <td class="test-name-cell">${t.name}<span class="cpt-tag">${t.cpt}</span></td>
+      <td class="num">${fmt$smart(t.medicare)}</td>
+      <td class="num">${fmt$smart(t.insMedian)}</td>
+      <td class="num">${fmt$smart(t.cash)}</td>
+      <td class="num">${fmt$smart(t.gross)}</td>
+      <td class="num" style="color:var(--good);">${fmt$smart(t.dpc)}</td>
+      <td>${badge}</td>
+      <td>${rangeBarSVG(t, pMin, pMax)}</td>
+    </tr>`;
+  }).join("");
+  document.querySelectorAll("th[data-key]").forEach(th => {
+    th.classList.toggle("sorted", th.dataset.key === key);
+    const arrow = th.querySelector(".sort-arrow");
+    if (arrow) arrow.textContent = (th.dataset.key === key && dir === "asc") ? "▲" : "▼";
+  });
+  document.querySelectorAll("#comparisonBody tr").forEach(tr => {
+    tr.addEventListener("click", () => {
+      state.selectedCpt = tr.dataset.cpt;
+      renderTable();
+      renderDrilldown();
+      document.getElementById("drilldownSection").scrollIntoView({behavior: "smooth", block: "start"});
+    });
+  });
+}
+
+function rangeBarSVG(t, pMin, pMax) {
+  const W = 200, H = 22, pad = 4;
+  const project = v => {
+    if (v == null || v <= 0) return null;
+    return pad + ((Math.log10(v) - Math.log10(pMin)) / (Math.log10(pMax) - Math.log10(pMin))) * (W - 2 * pad);
+  };
+  const points = [
+    {v: t.medicare, color: TIER.medicare.color, label: "Medicare", r: 3.2},
+    {v: t.insMedian, color: TIER.insurance.color, label: "Insurance", r: 3.2},
+    {v: t.dpc, color: TIER.dpc.color, label: "DPC", r: 4},
+    {v: t.cash, color: TIER.cash.color, label: "Hospital cash", r: 4},
+    {v: t.gross, color: TIER.gross.color, label: "Hospital list", r: 3.2},
+  ];
+  const dpcX = project(t.dpc), cashX = project(t.cash);
+  let connector = "";
+  if (dpcX != null && cashX != null) {
+    connector = `<line x1="${dpcX}" y1="${H/2}" x2="${cashX}" y2="${H/2}" stroke="var(--line-strong)" stroke-width="1"/>`;
+  }
+  const dots = points.map(p => {
+    const x = project(p.v);
+    if (x == null) return "";
+    return `<circle cx="${x}" cy="${H/2}" r="${p.r}" fill="${p.color}"><title>${p.label}: ${fmt$(p.v)}</title></circle>`;
+  }).join("");
+  return `<svg class="range-bar" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">
+    <line x1="${pad}" y1="${H/2}" x2="${W-pad}" y2="${H/2}" stroke="var(--line)" stroke-width="1"/>
+    ${connector}${dots}
+  </svg>`;
+}
+
+let drillChart = null;
+function renderDrilldown() {
+  const t = TESTS.find(x => x.cpt === state.selectedCpt);
+  const container = document.getElementById("drilldownContent");
+  if (!t) {
+    container.className = "drilldown-empty";
+    container.innerHTML = "No test selected.";
+    return;
+  }
+  document.getElementById("drilldownTitle").textContent = `${t.name} (${t.cpt})`;
+  document.getElementById("drilldownDesc").textContent = `${t.cat}. DPC source: ${t.dpcSrc}.`;
+  container.className = "";
+
+  const cashRatio = t.cashOverDpc;
+  const cashVsMedicare = t.cashOverMedicare;
+  const insVsMedicare = t.insMedian / t.medicare;
+
+  container.innerHTML = `
+    <div class="drilldown-grid">
+      <div>
+        <div class="drilldown-meta">
+          <div class="item"><div class="lbl">Medicare</div><div class="val">${fmt$(t.medicare)}</div></div>
+          <div class="item"><div class="lbl">DPC</div><div class="val" style="color:var(--good);">${fmt$(t.dpc)}</div></div>
+          <div class="item"><div class="lbl">Insurance median</div><div class="val">${fmt$(t.insMedian)}</div></div>
+          <div class="item"><div class="lbl">Insurance mean</div><div class="val">${fmt$(t.insMean)}</div></div>
+          <div class="item"><div class="lbl">Hospital cash</div><div class="val" style="color:var(--bad);">${fmt$(t.cash)}</div></div>
+          <div class="item"><div class="lbl">Hospital list</div><div class="val" style="color:var(--bad);">${fmt$(t.gross)}</div></div>
+        </div>
+        <div style="height:280px;"><canvas id="drillChart"></canvas></div>
+      </div>
+      <div>
+        <h3 style="font-size:14px;margin:0 0 6px;">What this test really costs</h3>
+        <div class="markup-narrative">
+          <p>The same blood draw, priced four ways:</p>
+          <p>Through a DPC clinic, the patient pays <b style="color:var(--good)">${fmt$smart(t.dpc)}</b> &mdash; the wholesale rate the lab charges when ordered directly outside insurance billing. Medicare reimburses MarinHealth <b>${fmt$smart(t.medicare)}</b>, and a typical insurance plan negotiates <b>${fmt$smart(t.insMedian)}</b> &mdash; about <b>${insVsMedicare.toFixed(1)}×</b> the Medicare rate.</p>
+          <p>If you walk in <b>without insurance</b>, MarinHealth charges <b style="color:var(--bad)">${fmt$smart(t.cash)}</b> in cash &mdash; that's <b>${cashRatio.toFixed(0)}×</b> the wholesale price and <b>${cashVsMedicare.toFixed(0)}×</b> what Medicare pays.</p>
+          <p>The hospital's official list price is <b style="color:var(--bad)">${fmt$smart(t.gross)}</b>. Almost no one pays this directly &mdash; it's the starting point for negotiation and the basis from which the cash discount is calculated.</p>
+        </div>
+
+        <h3 style="font-size:14px;margin:18px 0 6px;">What insurance plans actually pay</h3>
+        <p style="font-size:12.5px;color:var(--ink-soft);margin:0 0 10px;">${t.insN ? `Range across ${t.insN} commercial-payer contracts in MarinHealth's price file:` : "No commercial insurance data for this test."}</p>
+        ${t.insN ? boxplotSVG(t) : ""}
+      </div>
+    </div>
+  `;
+  drawDrillChart(t);
+}
+
+function boxplotSVG(t) {
+  const W = 480, H = 90;
+  const padL = 64, padR = 64;
+  const innerW = W - padL - padR;
+  const lo = Math.max(0.5, t.insMin * 0.9);
+  const hi = t.insMax * 1.05;
+  const project = v => padL + ((v - lo) / (hi - lo)) * innerW;
+  const xMin = project(t.insMin);
+  const xMed = project(t.insMedian);
+  const xMean = project(t.insMean);
+  const xMax = project(t.insMax);
+  const yBar = 36;
+  const barH = 22;
+  const yMid = yBar + barH/2;
+  const c = TIER.insurance.color;
+
+  return `<svg class="boxplot-svg" viewBox="0 0 ${W} ${H}">
+    <text x="${xMean}" y="14" text-anchor="middle" font-size="10.5" fill="${c}" font-family="ui-monospace,monospace">▲ mean ${fmt$smart(t.insMean)}</text>
+    <rect x="${xMin}" y="${yBar}" width="${xMax - xMin}" height="${barH}" fill="${c}" opacity="0.16" rx="3"/>
+    <line x1="${xMin}" y1="${yBar - 3}" x2="${xMin}" y2="${yBar + barH + 3}" stroke="${c}" stroke-width="2"/>
+    <line x1="${xMax}" y1="${yBar - 3}" x2="${xMax}" y2="${yBar + barH + 3}" stroke="${c}" stroke-width="2"/>
+    <line x1="${xMed}" y1="${yBar - 5}" x2="${xMed}" y2="${yBar + barH + 5}" stroke="${c}" stroke-width="3"/>
+    <polygon points="${xMean},${yBar - 2} ${xMean - 5},${yBar - 9} ${xMean + 5},${yBar - 9}" fill="${c}"/>
+    <text x="${xMin - 8}" y="${yMid + 4}" text-anchor="end" font-size="11" fill="${c}" font-family="ui-monospace,monospace" font-weight="600">${fmt$smart(t.insMin)}</text>
+    <text x="${xMax + 8}" y="${yMid + 4}" text-anchor="start" font-size="11" fill="${c}" font-family="ui-monospace,monospace" font-weight="600">${fmt$smart(t.insMax)}</text>
+    <text x="${xMed}" y="${yBar + barH + 22}" text-anchor="middle" font-size="11" fill="${c}" font-family="ui-monospace,monospace" font-weight="700">median ${fmt$smart(t.insMedian)}</text>
+  </svg>`;
+}
+
+function drawDrillChart(t) {
+  if (drillChart) drillChart.destroy();
+  const ctx = document.getElementById("drillChart");
+  if (!ctx) return;
+  const cssText = getComputedStyle(document.documentElement);
+  const inkSoft = cssText.getPropertyValue("--ink-soft").trim();
+  const line = cssText.getPropertyValue("--line").trim();
+  const ink = cssText.getPropertyValue("--ink").trim();
+  drillChart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: ["DPC", "Medicare", "Insurance (typical)", "Hospital cash", "Hospital list"],
+      datasets: [{
+        data: [t.dpc, t.medicare, t.insMedian, t.cash, t.gross],
+        backgroundColor: [TIER.dpc.color, TIER.medicare.color, TIER.insurance.color, TIER.cash.color, TIER.gross.color],
+        borderRadius: 4,
+      }],
+    },
+    options: {
+      indexAxis: "y", responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => fmt$(c.parsed.x) } } },
+      scales: {
+        x: { grid: { color: line }, ticks: { color: inkSoft, callback: v => "$" + v } },
+        y: { grid: { display: false }, ticks: { color: ink, font: { size: 12 } } },
+      },
+    },
+  });
+}
+
+function init() {
+  const savedTheme = localStorage.getItem("theme") || "light";
+  document.documentElement.dataset.theme = savedTheme;
+  document.getElementById("themeToggle").textContent = savedTheme === "dark" ? "Light mode" : "Dark mode";
+  document.getElementById("themeToggle").addEventListener("click", () => {
+    const next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+    document.documentElement.dataset.theme = next;
+    document.getElementById("themeToggle").textContent = next === "dark" ? "Light mode" : "Dark mode";
+    localStorage.setItem("theme", next);
+    renderStory();
+    if (drillChart && state.selectedCpt) drawDrillChart(TESTS.find(t => t.cpt === state.selectedCpt));
+  });
+  document.getElementById("printBtn").addEventListener("click", () => window.print());
+
+  document.getElementById("changeBasketLink").addEventListener("click", e => {
+    e.preventDefault();
+    document.getElementById("explorer").scrollIntoView({behavior: "smooth"});
+  });
+
+  document.querySelectorAll(".scenario-btn").forEach(b => {
+    b.addEventListener("click", () => {
+      state.scenario = b.dataset.scenario;
+      renderStory();
+    });
+  });
+
+  const catOpts = categories.map(c => `<option value="${c}">${c}</option>`).join("");
+  document.getElementById("basketCategory").insertAdjacentHTML("beforeend", catOpts);
+  document.getElementById("tableCategory").insertAdjacentHTML("beforeend", catOpts);
+
+  document.getElementById("basketSearch").addEventListener("input", e => {
+    state.basketSearch = e.target.value; renderBasketList();
+  });
+  document.getElementById("basketCategory").addEventListener("change", e => {
+    state.basketCategory = e.target.value; renderBasketList();
+  });
+
+  document.querySelectorAll("[data-preset]").forEach(b => {
+    b.addEventListener("click", () => {
+      const p = b.dataset.preset;
+      if (p === "all") {
+        state.basket = new Set(TESTS.map(t => t.cpt));
+        state.basketName = "all 27 tests";
+        state.activePreset = null;
+      } else if (p === "none") {
+        state.basket = new Set();
+        state.basketName = "your basket";
+        state.activePreset = null;
+      } else {
+        state.basket = new Set(PRESETS[p].cpts);
+        state.basketName = PRESETS[p].label;
+        state.activePreset = p;
+      }
+      writeHash();
+      renderPresets();
+      renderBasketList();
+      renderStory();
+    });
+  });
+
+  document.getElementById("tableSearch").addEventListener("input", e => {
+    state.tableSearch = e.target.value; renderTable();
+  });
+  document.getElementById("tableCategory").addEventListener("change", e => {
+    state.tableCategory = e.target.value; renderTable();
+  });
+  document.querySelectorAll("th[data-key]").forEach(th => {
+    th.addEventListener("click", () => {
+      const k = th.dataset.key;
+      if (state.tableSort.key === k) state.tableSort.dir = state.tableSort.dir === "asc" ? "desc" : "asc";
+      else { state.tableSort.key = k; state.tableSort.dir = (k === "name") ? "asc" : "desc"; }
+      renderTable();
+    });
+  });
+
+  document.getElementById("exportCsvBtn").addEventListener("click", exportCsv);
+  const doShare = async () => {
+    writeHash();
+    const url = location.href;
+    const title = "What does a blood test really cost?";
+    const text = "Side-by-side lab pricing: DPC clinic vs MarinHealth vs insurance vs Medicare.";
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, text, url });
+        return;
+      } catch (e) {
+        if (e.name === "AbortError") return;
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      showToast("Link copied to clipboard");
+    } catch {
+      showToast("Couldn't copy — URL is in the address bar");
+    }
+  };
+  document.getElementById("shareBtn").addEventListener("click", doShare);
+  document.getElementById("shareTop").addEventListener("click", doShare);
+
+  renderStats();
+  renderPresets();
+  renderBasketList();
+  renderStory();
+  renderTable();
+}
+
+function exportCsv() {
+  const selected = TESTS.filter(t => state.basket.has(t.cpt));
+  if (!selected.length) { showToast("Basket is empty"); return; }
+  const headers = ["Test","CPT","Category","Medicare","Ins min","Ins median","Ins mean","Ins max","Hospital list","Hospital cash","DPC","DPC source","Cash÷DPC","List÷DPC"];
+  const rows = selected.map(t => [
+    t.name, t.cpt, t.cat,
+    t.medicare ?? "", t.insMin ?? "", t.insMedian ?? "", t.insMean ?? "", t.insMax ?? "",
+    t.gross ?? "", t.cash ?? "", t.dpc ?? "", t.dpcSrc,
+    t.cashOverDpc != null ? t.cashOverDpc.toFixed(2) : "",
+    t.grossOverDpc != null ? t.grossOverDpc.toFixed(2) : "",
+  ]);
+  const tally = key => selected.reduce((s, t) => s + (t[key] || 0), 0);
+  rows.push([]);
+  rows.push(["TOTAL", "", "", tally("medicare").toFixed(2), "", tally("insMedian").toFixed(2), tally("insMean").toFixed(2), "", tally("gross").toFixed(2), tally("cash").toFixed(2), tally("dpc").toFixed(2), "", "", ""]);
+  const csv = [headers, ...rows].map(r => r.map(c => {
+    const s = String(c ?? "");
+    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  }).join(",")).join("\n");
+  const blob = new Blob([csv], {type: "text/csv"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = `lab-basket-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast("CSV downloaded");
+}
+
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
