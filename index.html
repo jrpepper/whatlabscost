@@ -439,12 +439,13 @@ button:hover, .btn:hover { background: var(--accent-soft); border-color: var(--a
 
 .builder {
   display: grid;
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: 300px minmax(0, 1fr);
   gap: 18px;
   margin-bottom: 24px;
   align-items: start;
 }
-@media (max-width: 980px) { .builder { grid-template-columns: 1fr; } }
+@media (max-width: 980px) { .builder { grid-template-columns: minmax(0, 1fr); } }
+.builder > section.panel { min-width: 0; }
 
 aside.sidebar {
   background: var(--panel);
@@ -546,9 +547,9 @@ section.panel .desc { color: var(--ink-soft); font-size: 13.5px; margin: 0 0 16p
 }
 .table-controls input { flex: 1; min-width: 160px; }
 
-table.comparison { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.comparison { width: 100%; border-collapse: collapse; font-size: 12.5px; }
 table.comparison th, table.comparison td {
-  padding: 8px; text-align: right;
+  padding: 6px 6px; text-align: right;
   border-bottom: 1px solid var(--line); white-space: nowrap;
 }
 table.comparison th:first-child, table.comparison td:first-child {
@@ -556,21 +557,24 @@ table.comparison th:first-child, table.comparison td:first-child {
 }
 table.comparison th {
   font-weight: 600; color: var(--ink-soft);
-  font-size: 11px; text-transform: uppercase; letter-spacing: .04em;
+  font-size: 10.5px; text-transform: uppercase; letter-spacing: .03em;
   cursor: pointer; user-select: none;
   position: sticky; top: 0; background: var(--panel); z-index: 1;
 }
 table.comparison th:hover { color: var(--ink); }
-table.comparison th .sort-arrow { opacity: .35; margin-left: 2px; font-size: 9px; }
+table.comparison th .sort-arrow { opacity: .35; margin-left: 1px; font-size: 8px; }
 table.comparison th.sorted .sort-arrow { opacity: 1; color: var(--accent); }
 table.comparison tbody tr { cursor: pointer; }
 table.comparison tbody tr:hover { background: var(--accent-soft); }
 table.comparison tbody tr.selected { background: var(--accent-soft); }
 table.comparison .num { font-family: var(--mono); }
-table.comparison .test-name-cell { min-width: 200px; }
+table.comparison .test-name-cell { min-width: 130px; max-width: 220px; }
 table.comparison .test-name-cell .cpt-tag {
-  font-family: var(--mono); font-size: 10px; color: var(--ink-faint); margin-left: 6px;
+  display: block; font-family: var(--mono); font-size: 10px;
+  color: var(--ink-faint); margin-left: 0; margin-top: 1px;
 }
+.markup-badge { padding: 1px 7px; font-size: 10.5px; }
+.range-bar { width: 140px; }
 .markup-badge {
   display: inline-block; padding: 2px 8px; border-radius: 999px;
   font-family: var(--mono); font-weight: 600; font-size: 11px;
@@ -581,8 +585,12 @@ table.comparison .test-name-cell .cpt-tag {
 [data-theme="dark"] .markup-badge.med { background: #3a2c0a; color: var(--warn); }
 .range-bar { width: 200px; }
 .table-scroll {
-  max-height: 640px; overflow-y: auto;
-  border: 1px solid var(--line); border-radius: 8px;
+  max-height: 640px;
+  overflow-y: auto;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--line);
+  border-radius: 8px;
 }
 
 .drilldown-empty {
@@ -620,6 +628,92 @@ table.comparison .test-name-cell .cpt-tag {
   pointer-events: none; z-index: 100;
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ===== Mobile responsive improvements ===== */
+@media (max-width: 720px) {
+  body { font-size: 15px; }
+  .wrap, .wrap-wide { padding: 0 14px; }
+  nav.top { padding: 10px 0 6px; gap: 10px; }
+  section.hero { margin: 18px 0 32px; }
+  section.hero h1 { font-size: 28px; line-height: 1.12; margin-bottom: 10px; }
+  section.hero .deck { font-size: 17px; margin-bottom: 18px; }
+  section.hero .lede { font-size: 15px; line-height: 1.6; }
+  section.hero .source-note { padding: 12px 14px; font-size: 12.5px; }
+  .stats { gap: 10px; margin-bottom: 24px; }
+  .stat { padding: 14px 16px; }
+  .stat .value { font-size: 28px; }
+  .stat .hint { font-size: 12px; }
+  section.story { padding: 22px 18px; border-radius: 10px; }
+  section.story .question { font-size: 21px; }
+  section.story .basket-hint { font-size: 13px; }
+  .scenario-grid { gap: 8px; margin-bottom: 20px; }
+  .scenario-btn { padding: 12px 10px; }
+  .scenario-btn .sc-label { font-size: 13px; }
+  .scenario-btn .sc-sub { font-size: 11px; }
+  .scenario-btn .sc-warn { font-size: 8.5px; padding: 1px 5px; top: 6px; right: 6px; }
+  .story-result { padding-top: 18px; }
+  .story-headline { font-size: 14px; }
+  .story-bignum { font-size: 44px; }
+  .story-narrative { font-size: 16px; line-height: 1.5; }
+  .story-chart-host { height: 200px; }
+  .tier-tile { padding: 8px 10px; }
+  .tier-tile .label { font-size: 10px; }
+  .tier-tile .price { font-size: 16px; }
+  .tier-tile .vs { font-size: 10px; }
+  section.panel { padding: 18px 16px; }
+  .pitfalls-title { font-size: 19px; }
+  .pitfalls-intro { font-size: 13.5px; }
+  .pitfall-card { padding: 12px 14px; }
+  .pitfall-card .amount { font-size: 22px; }
+  .pitfall-card h3 { font-size: 13.5px; }
+  .pitfall-card .desc { font-size: 12px; }
+  .explorer-intro h2 { font-size: 22px; }
+  .explorer-intro p { font-size: 14px; }
+  aside.sidebar { padding: 14px; }
+  details.about summary { padding: 12px 16px; font-size: 13.5px; }
+  details.about .body { padding: 4px 16px 18px; font-size: 13px; }
+
+  /* Per-test table: enable horizontal scroll + hide low-priority columns + compact cells */
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table.comparison th, table.comparison td { padding: 7px 6px; font-size: 12px; }
+  table.comparison .test-name-cell { min-width: 105px; max-width: 150px; }
+  table.comparison .cpt-tag { display: block; margin-left: 0; margin-top: 1px; }
+  /* Narrow Hosp. cash column on mobile to ~60% of its default width */
+  table.comparison th:nth-child(4),
+  table.comparison td:nth-child(4) {
+    padding-left: 3px;
+    padding-right: 3px;
+    font-size: 11.5px;
+  }
+  /* Hide Medicare, Hospital list, and Range columns on mobile (least critical for the comparison story) */
+  table.comparison th:nth-child(6), table.comparison td:nth-child(6) { display: none; }
+  table.comparison th:nth-child(7), table.comparison td:nth-child(7) { display: none; }
+  table.comparison th:nth-child(8), table.comparison td:nth-child(8) { display: none; }
+  /* Narrow Cash markup column on mobile to ~half its desktop width */
+  table.comparison th:nth-child(2),
+  table.comparison td:nth-child(2) {
+    width: 1%;
+    padding-left: 3px;
+    padding-right: 3px;
+    text-align: center;
+  }
+  table.comparison th:nth-child(2) { white-space: normal; line-height: 1.15; }
+  .markup-badge { padding: 1px 5px; font-size: 10px; }
+}
+
+@media (max-width: 480px) {
+  section.hero h1 { font-size: 25px; }
+  section.hero .deck { font-size: 15px; }
+  .story-bignum { font-size: 38px; }
+  .story-narrative { font-size: 15px; }
+  .scenario-btn { padding: 10px 8px; }
+  .scenario-btn .sc-emoji { font-size: 18px; }
+  .scenario-btn .sc-label { font-size: 12px; }
+  .scenario-btn .sc-sub { font-size: 10.5px; }
+  .scenario-btn .sc-warn { font-size: 8px; padding: 1px 4px; }
+  .stat .value { font-size: 24px; }
+  .pitfall-card .amount { font-size: 20px; }
+}
 
 /* Insurance pitfalls section */
 section.panel.pitfalls {
@@ -748,6 +842,49 @@ section.panel.pitfalls {
 .pitfall-explainer .body li { margin: 4px 0; }
 .pitfall-explainer .body b { color: var(--ink); }
 
+/* Actions / what patients can do section */
+.actions-title {
+  font-family: var(--serif);
+  font-size: 24px;
+  letter-spacing: -0.01em;
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+.actions-intro {
+  color: var(--ink-soft);
+  margin: 0 0 20px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  max-width: 720px;
+}
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+@media (max-width: 720px) { .actions-grid { grid-template-columns: 1fr; } }
+.action-item {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--good);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.action-item h3 {
+  margin: 0 0 6px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.action-item p {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+.action-item p:last-child { margin-bottom: 0; }
+.action-item a { color: var(--accent); }
+
 @media print {
   nav.top, .table-controls, .sidebar-actions, #drilldownSection,
   .search-row, .presets, details.about summary::before { display: none !important; }
@@ -776,12 +913,12 @@ section.panel.pitfalls {
   <h1>Same blood test. Wildly different prices.</h1>
   <p class="deck">It depends entirely on who is paying.</p>
 
-  <p class="lede">A complete blood count (CBC) costs <span class="green">$2.55</span> at wholesale &mdash; the rate a reference lab charges when a Direct Primary Care clinic orders the test directly, outside the insurance billing system. That price is passed through to the patient. MarinHealth Medical Center's posted list price for the same blood draw is <span class="red">$394</span> &mdash; a <span class="num">154×</span> markup over the underlying cost of the test.</p>
+  <p class="lede">A complete blood count (CBC) costs <span class="green">$2.55</span> at wholesale &mdash; that's what reference labs charge when the test is ordered directly, outside the insurance billing system. The hospital's posted list price for the same blood draw at its outpatient lab is <span class="red">$394</span> &mdash; a <span class="num">154×</span> markup over the underlying cost of the test.</p>
 
-  <p class="lede">The pattern repeats across the data. Across 27 common primary-care lab tests, MarinHealth's posted cash price averages <b><span class="num">54×</span> the wholesale cost</b>. List prices average <b><span class="num">90×</span></b>. Insured patients rarely see those numbers &mdash; their plan negotiates a much lower rate behind the scenes. But people who are uninsured, between plans, or on high-deductible plans before they hit their deductible generally pay the full posted price.</p>
+  <p class="lede">The pattern repeats across the data. Across 27 common primary-care lab tests, the hospital's posted cash price averages <b><span class="num">54×</span> the wholesale cost</b>. List prices average <b><span class="num">90×</span></b>. Insured patients rarely see those numbers &mdash; their plan negotiates a much lower rate behind the scenes. But people who are uninsured, between plans, or on high-deductible plans before they hit their deductible generally pay the full posted price.</p>
 
   <div class="source-note">
-    All MarinHealth pricing on this page comes directly from the hospital's own <a href="https://www.mymarinhealth.org/patients-visitors/medical-center-patients-visitors/billing-insurance/pricing-transparency/" target="_blank" rel="noopener">Pricing Transparency page</a>, where it is published in compliance with federal hospital price transparency rules. Methodology and full sources are <a href="#" onclick="document.querySelector('details.about').open=true;document.querySelector('details.about').scrollIntoView({behavior:'smooth'});return false;">below</a>.
+    All prices on this page are for <b>outpatient lab tests</b> &mdash; the kind of bloodwork ordered at a routine doctor visit. Hospital pricing comes directly from a local hospital's own <a href="https://www.mymarinhealth.org/patients-visitors/medical-center-patients-visitors/billing-insurance/pricing-transparency/" target="_blank" rel="noopener">Pricing Transparency page</a>, where it is published in compliance with federal hospital price transparency rules. The story is broadly representative of how hospital chargemasters work nationwide. Methodology and full sources are <a href="#" onclick="document.querySelector('details.about').open=true;document.querySelector('details.about').scrollIntoView({behavior:'smooth'});return false;">below</a>.
   </div>
 </section>
 
@@ -792,9 +929,9 @@ section.panel.pitfalls {
 
   <div class="scenario-grid">
     <button class="scenario-btn active" data-scenario="dpc">
-      <div class="sc-emoji">🏥</div>
-      <div class="sc-label">DPC clinic</div>
-      <div class="sc-sub">Direct Primary Care, lab ordered outside insurance</div>
+      <div class="sc-emoji">🧪</div>
+      <div class="sc-label">Wholesale</div>
+      <div class="sc-sub">Lab ordered directly, outside insurance</div>
     </button>
     <button class="scenario-btn" data-scenario="medicare">
       <div class="sc-warn" title="Coverage gaps and Medicare Advantage networks can change this">⚠ caveats</div>
@@ -825,8 +962,8 @@ section.panel.pitfalls {
     <summary>What do these terms mean?</summary>
     <div class="glossary-body">
       <div class="gloss-item">
-        <h4><span class="dot" style="background:var(--c-dpc)"></span>DPC clinic</h4>
-        <p>Direct Primary Care clinics are membership-based primary care practices that order labs directly from reference labs, outside the insurance billing system. The wholesale price the lab charges in that arrangement is what the patient pays &mdash; the clinic typically adds little or no markup.</p>
+        <h4><span class="dot" style="background:var(--c-dpc)"></span>Wholesale (direct lab order)</h4>
+        <p>The negotiated wholesale rate available through lab-pricing marketplaces &mdash; companies like Rupa Health, Junction Health, and others &mdash; that let clinics order labs outside the insurance billing system. These marketplaces negotiate volume rates with reference labs (Quest, LabCorp, Access Med Labs, and similar) and pass them through to participating clinics, who can in turn pass them through to patients with little or no markup. This is generally a different price than what a clinic would pay sending a sample directly to Quest or LabCorp without going through a marketplace.</p>
       </div>
       <div class="gloss-item">
         <h4><span class="dot" style="background:var(--c-medicare)"></span>Medicare</h4>
@@ -838,7 +975,7 @@ section.panel.pitfalls {
       </div>
       <div class="gloss-item">
         <h4><span class="dot" style="background:var(--c-cash)"></span>Hospital cash</h4>
-        <p>The price MarinHealth charges patients paying out-of-pocket without insurance. It's the list price minus a 40% self-pay discount the hospital applies at time of service.</p>
+        <p>The price the hospital charges patients paying out-of-pocket without insurance. It's the list price minus a 40% self-pay discount the hospital applies at time of service.</p>
       </div>
       <div class="gloss-item" style="grid-column: 1 / -1;">
         <h4><span class="dot" style="background:var(--c-gross)"></span>Hospital list (chargemaster)</h4>
@@ -873,6 +1010,9 @@ section.panel.pitfalls {
     </div>
   </details>
 </section>
+
+<!-- ============ HEADLINE STATS ============ -->
+<div class="stats" id="statsRow"></div>
 
 </div><!-- /wrap -->
 
@@ -927,12 +1067,12 @@ section.panel.pitfalls {
         <thead>
           <tr>
             <th data-key="name">Test <span class="sort-arrow">▲</span></th>
-            <th data-key="medicare">Medicare <span class="sort-arrow">▲</span></th>
-            <th data-key="insMedian">Insurance <span class="sort-arrow">▲</span></th>
-            <th data-key="cash">Hosp. cash <span class="sort-arrow">▲</span></th>
-            <th data-key="gross">Hosp. list <span class="sort-arrow">▲</span></th>
-            <th data-key="dpc">DPC <span class="sort-arrow">▲</span></th>
             <th data-key="cashOverDpc">Cash markup <span class="sort-arrow">▲</span></th>
+            <th data-key="dpc">Wholesale <span class="sort-arrow">▲</span></th>
+            <th data-key="cash">Hosp. cash <span class="sort-arrow">▲</span></th>
+            <th data-key="insMedian">Insurance <span class="sort-arrow">▲</span></th>
+            <th data-key="medicare">Medicare <span class="sort-arrow">▲</span></th>
+            <th data-key="gross">Hosp. list <span class="sort-arrow">▲</span></th>
             <th>Range</th>
           </tr>
         </thead>
@@ -950,33 +1090,63 @@ section.panel.pitfalls {
 
 </div><!-- /wrap-wide -->
 
-<!-- ============ STATS + ABOUT (moved below explorer) ============ -->
+<!-- ============ HOW TO GET LOWER PRICING ============ -->
 <div class="wrap">
 
-<div class="stats" id="statsRow"></div>
+<section class="panel" id="actionsSection">
+  <h2 class="actions-title">How to get more affordable lab pricing</h2>
+  <p class="actions-intro">A few practical options for patients who want routine bloodwork at lower cost.</p>
+
+  <div class="actions-grid">
+    <div class="action-item">
+      <h3>Ask your doctor about direct-pay options</h3>
+      <p>Some primary care practices &mdash; particularly direct primary care (DPC) and concierge models &mdash; have arrangements that let them order labs at cash prices much lower than a hospital outpatient lab would charge. Most traditional insurance-billed practices don't, but it costs nothing to ask, and the difference per test can be substantial.</p>
+    </div>
+
+    <div class="action-item">
+      <h3>Direct-to-consumer lab services</h3>
+      <p>Several reference labs and independent companies let patients order routine bloodwork online and pay cash directly. Pricing is much lower than a hospital outpatient lab, though it's still meaningfully higher than the wholesale rates available through clinic-direct arrangements. You'll need to share results with a physician for interpretation, and not every test is available without a doctor's order.</p>
+    </div>
+
+    <div class="action-item">
+      <h3>Hospital financial assistance</h3>
+      <p>Most non-profit hospitals are required by federal law to offer charity care or financial assistance programs to qualifying patients. These programs often aren't well-advertised but can significantly reduce a bill. Ask the billing department directly &mdash; before assuming you can't pay.</p>
+    </div>
+
+    <div class="action-item">
+      <h3>Ask for the cash price upfront</h3>
+      <p>Federal price transparency rules require hospitals to publish their cash and negotiated rates. You can call a hospital's billing department and ask for the cash price for a specific test (by CPT code) before scheduling. If you're already on the hook for a bill, request an itemized statement.</p>
+    </div>
+  </div>
+</section>
+
+</div><!-- /wrap -->
+
+<!-- ============ ABOUT ============ -->
+<div class="wrap">
 
 <details class="about">
   <summary>About this tool, the data, and methodology</summary>
   <div class="body">
-    <p><b>What this is.</b> A side-by-side price comparison for 27 common lab tests. For each test, you can see what Medicare pays, what commercial insurance pays, what the hospital charges someone paying out-of-pocket, and what a Direct Primary Care (DPC) clinic typically pays at wholesale.</p>
-    <p><b>Why it matters.</b> Insured patients with low deductibles rarely see hospital list or cash prices &mdash; their plan negotiates a different rate behind the scenes. But for the uninsured, the underinsured, and patients on high-deductible plans, the difference between paying through a hospital versus a DPC clinic can run into the thousands of dollars per year for routine lab work.</p>
+    <p><b>What this is.</b> A side-by-side price comparison for 27 common lab tests. For each test, you can see what Medicare pays, what commercial insurance pays, what the hospital charges someone paying out-of-pocket, and the wholesale rate reference labs charge when ordered directly outside insurance billing.</p>
+    <p><b>Why it matters.</b> Insured patients with low deductibles rarely see hospital list or cash prices &mdash; their plan negotiates a different rate behind the scenes. But for the uninsured, the underinsured, and patients on high-deductible plans, the difference between paying through a hospital and paying the wholesale rate can run into the thousands of dollars per year for routine lab work.</p>
     <h4>Where the data comes from</h4>
     <ul>
-      <li><b>MarinHealth prices</b> are taken directly from MarinHealth Medical Center's own price list (the "machine-readable file" version 3.0.0, last updated March 26, 2026), which the hospital publishes on its <a href="https://www.mymarinhealth.org/patients-visitors/medical-center-patients-visitors/billing-insurance/pricing-transparency/" target="_blank" rel="noopener">Pricing Transparency page</a>. The "cash" prices used here match what the hospital's own consumer pricing tool shows.</li>
+      <li><b>Hospital prices</b> are taken directly from a local hospital's own price list (the "machine-readable file" version 3.0.0, last updated March 26, 2026), which the hospital publishes on its <a href="https://www.mymarinhealth.org/patients-visitors/medical-center-patients-visitors/billing-insurance/pricing-transparency/" target="_blank" rel="noopener">Pricing Transparency page</a>. The "cash" prices used here match what the hospital's own consumer pricing tool shows. The pattern shown here is broadly representative of how hospital chargemasters work, not unique to this institution.</li>
       <li><b>Medicare and commercial insurance rates</b> come from the same file. The Medicare rate matches the published 2025 Medicare Clinical Lab Fee Schedule.</li>
-      <li><b>DPC wholesale prices</b> are the cheapest publicly posted rates from independent DPC clinics and reference labs (Iron DPC, Birmingham DPC, Simplicity DPC, Access Med Labs) as of April 2026.</li>
+      <li><b>Wholesale prices</b> reflect typical wholesale rates available to clinics that order labs directly through lab-pricing marketplaces and reference-lab arrangements, compiled from a range of sources as of April 2026. Individual marketplace and clinic pricing varies and may be higher or lower than the figures shown.</li>
     </ul>
     <h4>Methodology notes</h4>
     <ul>
-      <li>The "hospital cash" and "hospital list" prices use the most common ("modal") price line for each test code in MarinHealth's file, which matches the hospital's own consumer pricing tool. A few outlier line items are excluded.</li>
+      <li>The "hospital cash" and "hospital list" prices use the most common ("modal") price line for each test code in the hospital's file, which matches the hospital's own consumer pricing tool. A few outlier line items are excluded.</li>
       <li>The hospital's cash price is consistently 60% of its list price &mdash; that's the 40% self-pay discount applied at time of service.</li>
       <li>Commercial insurance figures exclude a $2,330 default contract ceiling that appears across many tests but doesn't reflect real pricing.</li>
-      <li>Chlamydia and Gonorrhea NAATs are billed separately at MarinHealth ($318 each) but typically ordered together as a pair; DPC pricing of $15 for the bundle is split as $7.50 each here.</li>
+      <li>Chlamydia and Gonorrhea NAATs are billed separately at the hospital ($318 each) but typically ordered together as a pair; the wholesale price of $15 for the bundle is split as $7.50 each here.</li>
     </ul>
     <h4>About the framing</h4>
     <p>Hospital pricing reflects a mix of regulatory requirements, contract negotiations, charity-care obligations, and cross-subsidization that is largely invisible to the individual patient. The aim of this tool is simply to make those price differences visible so patients can navigate them.</p>
     <div class="disclaimer">
-      For information only &mdash; not medical, legal, or financial advice. Real prices for an individual patient depend on insurance coverage, contract terms, and other factors. Confirm pricing with your provider before scheduling care.
+      <b>For information only.</b> This tool is provided as an illustrative example of the general gap between hospital, insurance, and wholesale lab pricing &mdash; not as a precise quote for any individual patient. It is <b>not</b> medical, legal, or financial advice. Some figures may be inaccurate, out of date, or change over time as hospitals republish their machine-readable files and as marketplace pricing shifts. Real prices for an individual patient depend on insurance coverage, contract terms, place of service, modifiers, prior authorization status, and many other factors that this tool does not capture. <b>Always do your own research</b> and confirm pricing directly with your provider, your insurance plan, and the lab itself before scheduling care.
     </div>
   </div>
 </details>
@@ -987,33 +1157,33 @@ section.panel.pitfalls {
 
 <script>
 const TESTS = [
-  {name:"CBC w/ Differential",cpt:"85025",cat:"Hematology",medicare:7.77,insN:180,insMin:1.06,insMedian:30.24,insMean:29.43,insMax:53.08,gross:394,cash:236.4,dpc:2.55,dpcSrc:"Iron DPC"},
-  {name:"Comprehensive Metabolic Panel (CMP)",cpt:"80053",cat:"Chemistry",medicare:10.56,insN:156,insMin:10.56,insMedian:15.72,insMean:30.83,insMax:72.14,gross:530,cash:318,dpc:3,dpcSrc:"Birmingham DPC"},
-  {name:"Basic Metabolic Panel (BMP)",cpt:"80048",cat:"Chemistry",medicare:8.46,insN:153,insMin:8.46,insMedian:12.57,insMean:24.60,insMax:57.79,gross:472,cash:283.2,dpc:2.5,dpcSrc:"DPC Wholesale"},
-  {name:"Hemoglobin A1c",cpt:"83036",cat:"Endocrine",medicare:9.71,insN:370,insMin:6.30,insMedian:15.54,insMean:29.98,insMax:66.33,gross:286,cash:171.6,dpc:3.75,dpcSrc:"DPC Wholesale"},
-  {name:"Lipid Panel",cpt:"80061",cat:"Lipids",medicare:13.39,insN:176,insMin:13.39,insMedian:19.89,insMean:39.17,insMax:91.47,gross:516,cash:309.6,dpc:3.52,dpcSrc:"DPC Wholesale"},
-  {name:"TSH",cpt:"84443",cat:"Endocrine",medicare:16.80,insN:276,insMin:16.80,insMedian:21.00,insMean:49.46,insMax:114.76,gross:469,cash:281.4,dpc:3,dpcSrc:"DPC Wholesale"},
-  {name:"Free T4",cpt:"84439",cat:"Endocrine",medicare:9.02,insN:312,insMin:8.52,insMedian:11.28,insMean:25.67,insMax:61.62,gross:306,cash:183.6,dpc:3.5,dpcSrc:"DPC Wholesale"},
-  {name:"Urinalysis with Microscopy",cpt:"81001",cat:"Urine",medicare:3.17,insN:171,insMin:3.17,insMedian:15.06,insMean:12.61,insMax:21.65,gross:208,cash:124.8,dpc:2.5,dpcSrc:"DPC Wholesale"},
-  {name:"Urine Culture",cpt:"87086",cat:"Urine",medicare:8.07,insN:240,insMin:1.10,insMedian:31.42,insMean:30.77,insMax:55.13,gross:349,cash:209.4,dpc:8,dpcSrc:"Simplicity DPC"},
-  {name:"PSA, Total",cpt:"84153",cat:"Cancer Screening",medicare:18.39,insN:252,insMin:10.08,insMedian:22.99,insMean:51.35,insMax:125.62,gross:512,cash:307.2,dpc:3.8,dpcSrc:"DPC Wholesale"},
-  {name:"Vitamin D, 25-Hydroxy",cpt:"82306",cat:"Vitamins",medicare:29.60,insN:224,insMin:20,insMedian:37,insMean:84.41,insMax:202.20,gross:265,cash:159,dpc:13,dpcSrc:"Iron DPC"},
+  {name:"CBC w/ Differential",cpt:"85025",cat:"Hematology",medicare:7.77,insN:180,insMin:1.06,insMedian:30.24,insMean:29.43,insMax:53.08,gross:394,cash:236.4,dpc:2.55,dpcSrc:"Reference lab"},
+  {name:"Comprehensive Metabolic Panel (CMP)",cpt:"80053",cat:"Chemistry",medicare:10.56,insN:156,insMin:10.56,insMedian:15.72,insMean:30.83,insMax:72.14,gross:530,cash:318,dpc:3,dpcSrc:"Reference lab"},
+  {name:"Basic Metabolic Panel (BMP)",cpt:"80048",cat:"Chemistry",medicare:8.46,insN:153,insMin:8.46,insMedian:12.57,insMean:24.60,insMax:57.79,gross:472,cash:283.2,dpc:2.5,dpcSrc:"Reference lab"},
+  {name:"Hemoglobin A1c",cpt:"83036",cat:"Endocrine",medicare:9.71,insN:370,insMin:6.30,insMedian:15.54,insMean:29.98,insMax:66.33,gross:286,cash:171.6,dpc:3.75,dpcSrc:"Reference lab"},
+  {name:"Lipid Panel",cpt:"80061",cat:"Lipids",medicare:13.39,insN:176,insMin:13.39,insMedian:19.89,insMean:39.17,insMax:91.47,gross:516,cash:309.6,dpc:3.52,dpcSrc:"Reference lab"},
+  {name:"TSH",cpt:"84443",cat:"Endocrine",medicare:16.80,insN:276,insMin:16.80,insMedian:21.00,insMean:49.46,insMax:114.76,gross:469,cash:281.4,dpc:3,dpcSrc:"Reference lab"},
+  {name:"Free T4",cpt:"84439",cat:"Endocrine",medicare:9.02,insN:312,insMin:8.52,insMedian:11.28,insMean:25.67,insMax:61.62,gross:306,cash:183.6,dpc:3.5,dpcSrc:"Reference lab"},
+  {name:"Urinalysis with Microscopy",cpt:"81001",cat:"Urine",medicare:3.17,insN:171,insMin:3.17,insMedian:15.06,insMean:12.61,insMax:21.65,gross:208,cash:124.8,dpc:2.5,dpcSrc:"Reference lab"},
+  {name:"Urine Culture",cpt:"87086",cat:"Urine",medicare:8.07,insN:240,insMin:1.10,insMedian:31.42,insMean:30.77,insMax:55.13,gross:349,cash:209.4,dpc:8,dpcSrc:"Reference lab"},
+  {name:"PSA, Total",cpt:"84153",cat:"Cancer Screening",medicare:18.39,insN:252,insMin:10.08,insMedian:22.99,insMean:51.35,insMax:125.62,gross:512,cash:307.2,dpc:3.8,dpcSrc:"Reference lab"},
+  {name:"Vitamin D, 25-Hydroxy",cpt:"82306",cat:"Vitamins",medicare:29.60,insN:224,insMin:20,insMedian:37,insMean:84.41,insMax:202.20,gross:265,cash:159,dpc:13,dpcSrc:"Reference lab"},
   {name:"Vitamin B12",cpt:"82607",cat:"Vitamins",medicare:15.08,insN:184,insMin:6.30,insMedian:18.85,insMean:42.40,insMax:103.01,gross:291,cash:174.6,dpc:5.41,dpcSrc:"Access Med Labs"},
-  {name:"Ferritin",cpt:"82728",cat:"Iron Studies",medicare:13.63,insN:196,insMin:13.63,insMedian:20.24,insMean:39.94,insMax:93.11,gross:300,cash:180,dpc:2.20,dpcSrc:"Iron DPC"},
-  {name:"Serum Iron",cpt:"83540",cat:"Iron Studies",medicare:6.47,insN:156,insMin:6.47,insMedian:9.62,insMean:18.89,insMax:44.20,gross:191,cash:114.6,dpc:3,dpcSrc:"DPC Wholesale"},
-  {name:"TIBC (Total Iron Binding Capacity)",cpt:"83550",cat:"Iron Studies",medicare:8.74,insN:176,insMin:8.74,insMedian:10.93,insMean:25.44,insMax:59.70,gross:260,cash:156,dpc:3,dpcSrc:"DPC Wholesale"},
+  {name:"Ferritin",cpt:"82728",cat:"Iron Studies",medicare:13.63,insN:196,insMin:13.63,insMedian:20.24,insMean:39.94,insMax:93.11,gross:300,cash:180,dpc:2.20,dpcSrc:"Reference lab"},
+  {name:"Serum Iron",cpt:"83540",cat:"Iron Studies",medicare:6.47,insN:156,insMin:6.47,insMedian:9.62,insMean:18.89,insMax:44.20,gross:191,cash:114.6,dpc:3,dpcSrc:"Reference lab"},
+  {name:"TIBC (Total Iron Binding Capacity)",cpt:"83550",cat:"Iron Studies",medicare:8.74,insN:176,insMin:8.74,insMedian:10.93,insMean:25.44,insMax:59.70,gross:260,cash:156,dpc:3,dpcSrc:"Reference lab"},
   {name:"Magnesium",cpt:"83735",cat:"Chemistry",medicare:6.70,insN:312,insMin:4.17,insMedian:8.38,insMean:19.21,insMax:45.77,gross:252,cash:151.2,dpc:1.57,dpcSrc:"Access Med Labs"},
   {name:"Uric Acid",cpt:"84550",cat:"Chemistry",medicare:4.52,insN:116,insMin:4.52,insMedian:6.72,insMean:13.11,insMax:30.88,gross:197,cash:118.2,dpc:1.62,dpcSrc:"Access Med Labs"},
-  {name:"hsCRP (high-sensitivity)",cpt:"86141",cat:"Inflammation",medicare:12.95,insN:162,insMin:12.95,insMedian:34.64,insMean:45.86,insMax:88.46,gross:210,cash:126,dpc:4,dpcSrc:"DPC Wholesale"},
-  {name:"Creatinine, Standalone",cpt:"82565",cat:"Chemistry",medicare:5.12,insN:192,insMin:5.12,insMedian:7.90,insMean:14.76,insMax:34.97,gross:194,cash:116.4,dpc:2,dpcSrc:"DPC Wholesale"},
-  {name:"Hepatitis C Antibody",cpt:"86803",cat:"Infectious / STI",medicare:14.27,insN:160,insMin:1.10,insMedian:37.10,insMean:46.37,insMax:97.48,gross:237,cash:142.2,dpc:8,dpcSrc:"DPC Wholesale"},
-  {name:"HIV 4th Generation (Ag/Ab)",cpt:"87389",cat:"Infectious / STI",medicare:24.08,insN:140,insMin:12,insMedian:62.61,insMean:79.54,insMax:164.49,gross:368,cash:220.8,dpc:10,dpcSrc:"DPC Wholesale"},
-  {name:"Chlamydia NAAT",cpt:"87491",cat:"Infectious / STI",medicare:35.09,insN:112,insMin:21,insMedian:96.50,insMean:125.78,insMax:239.70,gross:318,cash:190.8,dpc:7.5,dpcSrc:"DPC (½ of $15 GC/CT bundle)"},
-  {name:"GC NAAT (Gonorrhea)",cpt:"87591",cat:"Infectious / STI",medicare:35.09,insN:112,insMin:21,insMedian:96.50,insMean:125.78,insMax:239.70,gross:318,cash:190.8,dpc:7.5,dpcSrc:"DPC (½ of $15 GC/CT bundle)"},
-  {name:"Microalbumin/Creatinine Ratio",cpt:"82043",cat:"Urine",medicare:5.78,insN:68,insMin:5.78,insMedian:8.60,insMean:16.82,insMax:39.48,gross:190.32,cash:114.19,dpc:4,dpcSrc:"DPC Wholesale"},
-  {name:"PT/INR",cpt:"85610",cat:"Coagulation",medicare:4.29,insN:268,insMin:4.29,insMedian:11.80,insMean:16.18,insMax:29.30,gross:210,cash:126,dpc:3.5,dpcSrc:"DPC Wholesale"},
-  {name:"Blood Culture",cpt:"87040",cat:"Microbiology",medicare:10.32,insN:137,insMin:10.32,insMedian:49.02,insMean:40.56,insMax:70.50,gross:589,cash:353.4,dpc:8,dpcSrc:"DPC Wholesale"},
-  {name:"Strep Culture",cpt:"87070",cat:"Microbiology",medicare:8.62,insN:259,insMin:7.70,insMedian:23.71,insMean:31.07,insMax:58.88,gross:340,cash:204,dpc:6,dpcSrc:"DPC Wholesale"},
+  {name:"hsCRP (high-sensitivity)",cpt:"86141",cat:"Inflammation",medicare:12.95,insN:162,insMin:12.95,insMedian:34.64,insMean:45.86,insMax:88.46,gross:210,cash:126,dpc:4,dpcSrc:"Reference lab"},
+  {name:"Creatinine, Standalone",cpt:"82565",cat:"Chemistry",medicare:5.12,insN:192,insMin:5.12,insMedian:7.90,insMean:14.76,insMax:34.97,gross:194,cash:116.4,dpc:2,dpcSrc:"Reference lab"},
+  {name:"Hepatitis C Antibody",cpt:"86803",cat:"Infectious / STI",medicare:14.27,insN:160,insMin:1.10,insMedian:37.10,insMean:46.37,insMax:97.48,gross:237,cash:142.2,dpc:8,dpcSrc:"Reference lab"},
+  {name:"HIV 4th Generation (Ag/Ab)",cpt:"87389",cat:"Infectious / STI",medicare:24.08,insN:140,insMin:12,insMedian:62.61,insMean:79.54,insMax:164.49,gross:368,cash:220.8,dpc:10,dpcSrc:"Reference lab"},
+  {name:"Chlamydia NAAT",cpt:"87491",cat:"Infectious / STI",medicare:35.09,insN:112,insMin:21,insMedian:96.50,insMean:125.78,insMax:239.70,gross:318,cash:190.8,dpc:7.5,dpcSrc:"Reference lab (½ of $15 bundle)"},
+  {name:"GC NAAT (Gonorrhea)",cpt:"87591",cat:"Infectious / STI",medicare:35.09,insN:112,insMin:21,insMedian:96.50,insMean:125.78,insMax:239.70,gross:318,cash:190.8,dpc:7.5,dpcSrc:"Reference lab (½ of $15 bundle)"},
+  {name:"Microalbumin/Creatinine Ratio",cpt:"82043",cat:"Urine",medicare:5.78,insN:68,insMin:5.78,insMedian:8.60,insMean:16.82,insMax:39.48,gross:190.32,cash:114.19,dpc:4,dpcSrc:"Reference lab"},
+  {name:"PT/INR",cpt:"85610",cat:"Coagulation",medicare:4.29,insN:268,insMin:4.29,insMedian:11.80,insMean:16.18,insMax:29.30,gross:210,cash:126,dpc:3.5,dpcSrc:"Reference lab"},
+  {name:"Blood Culture",cpt:"87040",cat:"Microbiology",medicare:10.32,insN:137,insMin:10.32,insMedian:49.02,insMean:40.56,insMax:70.50,gross:589,cash:353.4,dpc:8,dpcSrc:"Reference lab"},
+  {name:"Strep Culture",cpt:"87070",cat:"Microbiology",medicare:8.62,insN:259,insMin:7.70,insMedian:23.71,insMean:31.07,insMax:58.88,gross:340,cash:204,dpc:6,dpcSrc:"Reference lab"},
 ];
 TESTS.forEach(t => {
   t.cashOverDpc = (t.cash != null && t.dpc != null) ? t.cash / t.dpc : null;
@@ -1030,7 +1200,7 @@ const PRESETS = {
 };
 
 const TIER = {
-  dpc:       { color:"#047857", label:"DPC clinic",         tile:"DPC clinic",          long:"a Direct Primary Care clinic"},
+  dpc:       { color:"#047857", label:"Wholesale",         tile:"Wholesale",          long:"a wholesale direct-order arrangement"},
   medicare:  { color:"#0891b2", label:"Medicare",            tile:"Medicare",            long:"Medicare"},
   insurance: { color:"#1e40af", label:"Insurance (typical)", tile:"Insurance (typical)", long:"a typical commercial insurance plan"},
   cash:      { color:"#dc2626", label:"Hospital cash",       tile:"Hospital cash",       long:"the hospital's cash price"},
@@ -1038,10 +1208,10 @@ const TIER = {
 };
 
 const TIER_INFO = {
-  dpc:       "Wholesale lab rate, paid by patients when DPC clinics order tests directly outside the insurance billing system.",
+  dpc:       "Wholesale lab rate paid by patients when tests are ordered directly from reference labs, outside the insurance billing system.",
   medicare:  "Federal CMS reimbursement rate (Clinical Lab Fee Schedule).",
   insurance: "What a typical commercial insurance plan negotiates with the hospital.",
-  cash:      "What MarinHealth charges patients paying out-of-pocket without insurance (40% off list).",
+  cash:      "What the hospital charges patients paying out-of-pocket without insurance (40% off list).",
   gross:     "Hospital chargemaster list price. Almost no one pays this directly.",
 };
 
@@ -1131,19 +1301,19 @@ function renderStory() {
   }
 
   if (sc === "dpc") {
-    narrative = `That's the wholesale rate reference labs charge when a DPC clinic orders these tests directly, outside the insurance billing system. The clinic passes that price through to the patient with little or no markup.<br><br>
-      The same basket would run <span class="num red">${fmt$0(t.cash)}</span> if you walked into MarinHealth without insurance &mdash; <b><span class="num red">${(t.cash/total).toFixed(0)}× more</span></b>. Switching to a DPC clinic for these labs would save <b><span class="num green">${fmt$0(t.cash - total)}</span></b> a year.`;
+    narrative = `That's the wholesale rate reference labs charge when these tests are ordered directly, outside the insurance billing system. Some clinics and direct-pay arrangements pass that price through to the patient with little or no markup.<br><br>
+      The same basket would run <span class="num red">${fmt$0(t.cash)}</span> if you got these labs done at the hospital's outpatient lab without insurance &mdash; <b><span class="num red">${(t.cash/total).toFixed(0)}× more</span></b>. Ordering these labs at the wholesale rate would save <b><span class="num green">${fmt$0(t.cash - total)}</span></b> a year.`;
   } else if (sc === "medicare") {
-    narrative = `That's the federally set rate. It's <span class="num">${(total/t.dpc).toFixed(1)}×</span> the DPC wholesale price &mdash; reasonable, but still more than what reference labs charge directly.<br><br>
-      If you didn't have Medicare and walked in to pay cash, the same basket would cost <b><span class="num red">${fmt$0(t.cash)}</span></b> &mdash; <span class="num red">${(t.cash/total).toFixed(0)}×</span> the Medicare rate.<br>
+    narrative = `That's the federally set rate. It's <span class="num">${(total/t.dpc).toFixed(1)}×</span> the wholesale price &mdash; reasonable, but still more than what reference labs charge when ordered directly.<br><br>
+      If you didn't have Medicare and got these same tests at the hospital's outpatient lab paying cash, the basket would cost <b><span class="num red">${fmt$0(t.cash)}</span></b> &mdash; <span class="num red">${(t.cash/total).toFixed(0)}×</span> the Medicare rate.<br>
       <a class="story-warning-link" data-jump="pitfalls">⚠ Coverage gaps, Medicare Advantage networks, and denied claims can change this number &mdash; see what can go wrong ↓</a>`;
   } else if (sc === "insurance") {
-    narrative = `That's what a typical commercial insurance plan pays MarinHealth for these tests &mdash; you don't see this number, but your plan negotiated it. If you have a copay, your share is a fraction of this.<br><br>
-      A patient walking in <i>without</i> insurance is asked to pay <b><span class="num red">${fmt$0(t.cash)}</span></b> for the same basket. That's <b><span class="num red">${(t.cash/total).toFixed(0)}× more</span></b> than what your insurance plan would pay.<br>
+    narrative = `That's what a typical commercial insurance plan pays the hospital's outpatient lab for these tests &mdash; you don't see this number, but your plan negotiated it. If you have a copay, your share is a fraction of this.<br><br>
+      A patient getting these same labs at the hospital's outpatient lab <i>without</i> insurance is asked to pay <b><span class="num red">${fmt$0(t.cash)}</span></b> for the basket. That's <b><span class="num red">${(t.cash/total).toFixed(0)}× more</span></b> than what your insurance plan would pay.<br>
       <a class="story-warning-link" data-jump="pitfalls">⚠ Several common situations can leave you paying much more than this &mdash; see what can go wrong ↓</a>`;
   } else if (sc === "cash") {
-    narrative = `That's the price MarinHealth charges someone paying out-of-pocket &mdash; it's already discounted 40% off the hospital list price. <br><br>
-      The same basket of tests costs <b><span class="num green">${fmt$0(t.dpc)}</span></b> through a DPC clinic &mdash; that's <b><span class="num red">${(total/t.dpc).toFixed(0)}× cheaper</span></b>. A patient with insurance would have their plan pay roughly <b><span class="num">${fmt$0(t.insurance)}</span></b> for the same tests.`;
+    narrative = `That's the price the hospital's outpatient lab charges someone paying out-of-pocket &mdash; it's already discounted 40% off the hospital list price. <br><br>
+      The same basket of tests costs <b><span class="num green">${fmt$0(t.dpc)}</span></b> at the wholesale rate &mdash; that's <b><span class="num red">${(total/t.dpc).toFixed(0)}× cheaper</span></b>. A patient with insurance would have their plan pay roughly <b><span class="num">${fmt$0(t.insurance)}</span></b> for the same tests.`;
   }
 
   document.getElementById("storyResult").innerHTML = `
@@ -1181,10 +1351,10 @@ function renderSidebarTotals(t) {
     return;
   }
   el.innerHTML = `
-    <div class="row dpc"><span class="lbl">DPC</span><span class="val">${fmt$0(t.dpc)}</span></div>
+    <div class="row dpc"><span class="lbl">Wholesale</span><span class="val">${fmt$0(t.dpc)}</span></div>
     <div class="row"><span class="lbl">Insurance</span><span class="val">${fmt$0(t.insurance)}</span></div>
     <div class="row cash"><span class="lbl">Hospital cash</span><span class="val">${fmt$0(t.cash)}</span></div>
-    <div class="savings"><span class="lbl">DPC savings</span><span class="val">${fmt$0(t.cash - t.dpc)}</span></div>
+    <div class="savings"><span class="lbl">Wholesale savings</span><span class="val">${fmt$0(t.cash - t.dpc)}</span></div>
   `;
 }
 
@@ -1243,7 +1413,7 @@ function renderPitfalls(t) {
   el.innerHTML = cards.map(c => {
     const ratio = dpc > 0 ? c.amount / dpc : 0;
     const vsLine = dpc > 0
-      ? `vs <b>${fmt$0(dpc)}</b> at a DPC clinic &mdash; <b>${ratio.toFixed(0)}× more</b>`
+      ? `vs <b>${fmt$0(dpc)}</b> at the wholesale rate &mdash; <b>${ratio.toFixed(0)}× more</b>`
       : "";
     return `<div class="pitfall-card ${c.cls}">
       <div class="severity">${c.severity}</div>
@@ -1310,7 +1480,7 @@ function renderTierTiles(t) {
     const sel = x.key === state.scenario ? "selected" : "";
     let vs = "";
     if (x.key === "dpc") vs = "wholesale";
-    else if (dpc > 0 && x.value > 0) vs = (x.value / dpc).toFixed(1) + "× DPC";
+    else if (dpc > 0 && x.value > 0) vs = (x.value / dpc).toFixed(1) + "× wholesale";
     return `<div class="tier-tile ${x.key} ${sel}" data-scenario="${x.key}" title="${TIER_INFO[x.key]}">
       <div class="label">${TIER[x.key].tile}<span class="info" title="${TIER_INFO[x.key]}">i</span></div>
       <div class="price">${fmt$0(x.value)}</div>
@@ -1333,8 +1503,8 @@ function renderStats() {
   const avgGrossOverDpc = withData.reduce((s, t) => s + t.grossOverDpc, 0) / withData.length;
   const avgCashOverMedicare = withData.reduce((s, t) => s + t.cashOverMedicare, 0) / withData.length;
   const stats = [
-    {label: "Hospital cash vs DPC", value: avgCashOverDpc.toFixed(0) + "×", hint: "How much more uninsured patients pay at MarinHealth vs a DPC clinic, on average across 27 tests."},
-    {label: "Hospital list vs DPC", value: avgGrossOverDpc.toFixed(0) + "×", hint: "The full chargemaster markup before any self-pay discount."},
+    {label: "Hospital cash vs wholesale", value: avgCashOverDpc.toFixed(0) + "×", hint: "How much more uninsured patients pay at the hospital vs the wholesale rate reference labs charge, on average across 27 tests."},
+    {label: "Hospital list vs wholesale", value: avgGrossOverDpc.toFixed(0) + "×", hint: "The full chargemaster markup before any self-pay discount."},
     {label: "Hospital cash vs Medicare", value: avgCashOverMedicare.toFixed(0) + "×", hint: "What an uninsured patient pays vs what Medicare reimburses for the same test."},
   ];
   document.getElementById("statsRow").innerHTML = stats.map(s => `
@@ -1416,12 +1586,12 @@ function renderTable() {
     const sel = t.cpt === state.selectedCpt ? "selected" : "";
     return `<tr data-cpt="${t.cpt}" class="${sel}">
       <td class="test-name-cell">${t.name}<span class="cpt-tag">${t.cpt}</span></td>
-      <td class="num">${fmt$smart(t.medicare)}</td>
-      <td class="num">${fmt$smart(t.insMedian)}</td>
-      <td class="num">${fmt$smart(t.cash)}</td>
-      <td class="num">${fmt$smart(t.gross)}</td>
-      <td class="num" style="color:var(--good);">${fmt$smart(t.dpc)}</td>
       <td>${badge}</td>
+      <td class="num" style="color:var(--good);">${fmt$smart(t.dpc)}</td>
+      <td class="num">${fmt$smart(t.cash)}</td>
+      <td class="num">${fmt$smart(t.insMedian)}</td>
+      <td class="num">${fmt$smart(t.medicare)}</td>
+      <td class="num">${fmt$smart(t.gross)}</td>
       <td>${rangeBarSVG(t, pMin, pMax)}</td>
     </tr>`;
   }).join("");
@@ -1449,7 +1619,7 @@ function rangeBarSVG(t, pMin, pMax) {
   const points = [
     {v: t.medicare, color: TIER.medicare.color, label: "Medicare", r: 3.2},
     {v: t.insMedian, color: TIER.insurance.color, label: "Insurance", r: 3.2},
-    {v: t.dpc, color: TIER.dpc.color, label: "DPC", r: 4},
+    {v: t.dpc, color: TIER.dpc.color, label: "Wholesale", r: 4},
     {v: t.cash, color: TIER.cash.color, label: "Hospital cash", r: 4},
     {v: t.gross, color: TIER.gross.color, label: "Hospital list", r: 3.2},
   ];
@@ -1479,7 +1649,7 @@ function renderDrilldown() {
     return;
   }
   document.getElementById("drilldownTitle").textContent = `${t.name} (${t.cpt})`;
-  document.getElementById("drilldownDesc").textContent = `${t.cat}. DPC source: ${t.dpcSrc}.`;
+  document.getElementById("drilldownDesc").textContent = `${t.cat}. Wholesale source: ${t.dpcSrc}.`;
   container.className = "";
 
   const cashRatio = t.cashOverDpc;
@@ -1491,7 +1661,7 @@ function renderDrilldown() {
       <div>
         <div class="drilldown-meta">
           <div class="item"><div class="lbl">Medicare</div><div class="val">${fmt$(t.medicare)}</div></div>
-          <div class="item"><div class="lbl">DPC</div><div class="val" style="color:var(--good);">${fmt$(t.dpc)}</div></div>
+          <div class="item"><div class="lbl">Wholesale</div><div class="val" style="color:var(--good);">${fmt$(t.dpc)}</div></div>
           <div class="item"><div class="lbl">Insurance median</div><div class="val">${fmt$(t.insMedian)}</div></div>
           <div class="item"><div class="lbl">Insurance mean</div><div class="val">${fmt$(t.insMean)}</div></div>
           <div class="item"><div class="lbl">Hospital cash</div><div class="val" style="color:var(--bad);">${fmt$(t.cash)}</div></div>
@@ -1503,13 +1673,13 @@ function renderDrilldown() {
         <h3 style="font-size:14px;margin:0 0 6px;">What this test really costs</h3>
         <div class="markup-narrative">
           <p>The same blood draw, priced four ways:</p>
-          <p>Through a DPC clinic, the patient pays <b style="color:var(--good)">${fmt$smart(t.dpc)}</b> &mdash; the wholesale rate the lab charges when ordered directly outside insurance billing. Medicare reimburses MarinHealth <b>${fmt$smart(t.medicare)}</b>, and a typical insurance plan negotiates <b>${fmt$smart(t.insMedian)}</b> &mdash; about <b>${insVsMedicare.toFixed(1)}×</b> the Medicare rate.</p>
-          <p>If you walk in <b>without insurance</b>, MarinHealth charges <b style="color:var(--bad)">${fmt$smart(t.cash)}</b> in cash &mdash; that's <b>${cashRatio.toFixed(0)}×</b> the wholesale price and <b>${cashVsMedicare.toFixed(0)}×</b> what Medicare pays.</p>
+          <p>At the wholesale rate, the patient pays <b style="color:var(--good)">${fmt$smart(t.dpc)}</b> &mdash; what the reference lab charges when the test is ordered directly, outside insurance billing. Medicare reimburses the hospital <b>${fmt$smart(t.medicare)}</b>, and a typical insurance plan negotiates <b>${fmt$smart(t.insMedian)}</b> &mdash; about <b>${insVsMedicare.toFixed(1)}×</b> the Medicare rate.</p>
+          <p>If you get this test at the hospital's outpatient lab <b>without insurance</b>, the hospital charges <b style="color:var(--bad)">${fmt$smart(t.cash)}</b> in cash &mdash; that's <b>${cashRatio.toFixed(0)}×</b> the wholesale price and <b>${cashVsMedicare.toFixed(0)}×</b> what Medicare pays.</p>
           <p>The hospital's official list price is <b style="color:var(--bad)">${fmt$smart(t.gross)}</b>. Almost no one pays this directly &mdash; it's the starting point for negotiation and the basis from which the cash discount is calculated.</p>
         </div>
 
         <h3 style="font-size:14px;margin:18px 0 6px;">What insurance plans actually pay</h3>
-        <p style="font-size:12.5px;color:var(--ink-soft);margin:0 0 10px;">${t.insN ? `Range across ${t.insN} commercial-payer contracts in MarinHealth's price file:` : "No commercial insurance data for this test."}</p>
+        <p style="font-size:12.5px;color:var(--ink-soft);margin:0 0 10px;">${t.insN ? `Range across ${t.insN} commercial-payer contracts in the hospital's price file:` : "No commercial insurance data for this test."}</p>
         ${t.insN ? boxplotSVG(t) : ""}
       </div>
     </div>
@@ -1534,7 +1704,7 @@ function boxplotSVG(t) {
   const c = TIER.insurance.color;
 
   return `<svg class="boxplot-svg" viewBox="0 0 ${W} ${H}">
-    <text x="${xMean}" y="14" text-anchor="middle" font-size="10.5" fill="${c}" font-family="ui-monospace,monospace">▲ mean ${fmt$smart(t.insMean)}</text>
+    <text x="${xMean}" y="14" text-anchor="middle" font-size="10.5" fill="${c}" font-family="ui-monospace,monospace">mean ${fmt$smart(t.insMean)}</text>
     <rect x="${xMin}" y="${yBar}" width="${xMax - xMin}" height="${barH}" fill="${c}" opacity="0.16" rx="3"/>
     <line x1="${xMin}" y1="${yBar - 3}" x2="${xMin}" y2="${yBar + barH + 3}" stroke="${c}" stroke-width="2"/>
     <line x1="${xMax}" y1="${yBar - 3}" x2="${xMax}" y2="${yBar + barH + 3}" stroke="${c}" stroke-width="2"/>
@@ -1557,7 +1727,7 @@ function drawDrillChart(t) {
   drillChart = new Chart(ctx, {
     type: "bar",
     data: {
-      labels: ["DPC", "Medicare", "Insurance (typical)", "Hospital cash", "Hospital list"],
+      labels: ["Wholesale", "Medicare", "Insurance (typical)", "Hospital cash", "Hospital list"],
       datasets: [{
         data: [t.dpc, t.medicare, t.insMedian, t.cash, t.gross],
         backgroundColor: [TIER.dpc.color, TIER.medicare.color, TIER.insurance.color, TIER.cash.color, TIER.gross.color],
@@ -1655,7 +1825,7 @@ function init() {
     writeHash();
     const url = location.href;
     const title = "What does a blood test really cost?";
-    const text = "Side-by-side lab pricing: DPC clinic vs MarinHealth vs insurance vs Medicare.";
+    const text = "Side-by-side lab pricing: wholesale vs the hospital vs insurance vs Medicare.";
     if (navigator.share) {
       try {
         await navigator.share({ title, text, url });
@@ -1684,7 +1854,7 @@ function init() {
 function exportCsv() {
   const selected = TESTS.filter(t => state.basket.has(t.cpt));
   if (!selected.length) { showToast("Basket is empty"); return; }
-  const headers = ["Test","CPT","Category","Medicare","Ins min","Ins median","Ins mean","Ins max","Hospital list","Hospital cash","DPC","DPC source","Cash÷DPC","List÷DPC"];
+  const headers = ["Test","CPT","Category","Medicare","Ins min","Ins median","Ins mean","Ins max","Hospital list","Hospital cash","Wholesale","Wholesale source","Cash÷Wholesale","List÷Wholesale"];
   const rows = selected.map(t => [
     t.name, t.cpt, t.cat,
     t.medicare ?? "", t.insMin ?? "", t.insMedian ?? "", t.insMean ?? "", t.insMax ?? "",
